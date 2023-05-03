@@ -53,3 +53,6 @@ map('<leader>ma', '<CMD>TermExec cmd="manim -pql %"<CR>', 'n')
 -- fish scripts --
 map('<leader>fi', '<CMD>TermExec cmd="source %"<CR>', 'n')
 
+-- rust --
+map('<leader>cr', '<CMD>! cargo run<CR>', 'n')
+

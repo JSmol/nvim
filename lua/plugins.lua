@@ -61,4 +61,17 @@ return require('packer').startup(function()
   -- https://github.com/numToStr/Comment.nvim
   use { 'numToStr/Comment.nvim' }
 
+  -- rust and rust debugging https://github.com/simrat39/rust-tools.nvim
+  use 'simrat39/rust-tools.nvim'
+  use 'mfussenegger/nvim-dap'
+
+  use {
+    'saecki/crates.nvim',
+    tag = 'v0.3.0',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+        require('crates').setup()
+    end,
+  }
+
 end)

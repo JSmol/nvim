@@ -20,6 +20,9 @@ require('telescope').setup{
       "typings",
       "__pycache__",
 
+      -- rust
+      "target",
+
       "Images"
     }
   },
