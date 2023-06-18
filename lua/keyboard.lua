@@ -9,50 +9,51 @@ local function map(lhs, rhs, mode)
   )
 end
 
--- they changed Y to y$ for reasons --
-map('Y', 'yy', 'n')
-
--- manage buffers / screens --
-map('<C-n>', '<CMD>BufferLineCycleNext<CR>')
-map('<leader>w', '<CMD>close<CR>')
-map('<leader>q', '<CMD>bd<CR>')
-map('<leader>o', '<CMD>only<CR>')
-
 -- terminal --
-map('<Esc>', '<C-\\><C-n>', 't')
+map('<Esc>', '<C-\\><C-n>', 't') -- enter normal mode with esc in terminals
 map('<leader>sh', '<CMD>term<CR>i')
 map('<leader>sa', '<CMD>term sage<CR>i')
 
+-- they changed Y to y$ for reasons --
+map('Y', 'yy', 'n')
+
+-- toggler nvim tree --
+map('<C-d>', '<CMD>NvimTreeToggle<CR>')
+
+-- z e n m o d e --
+map('<leader>z', '<CMD>ZenMode<CR>')
+
+-- manage buffers / screens --
+map('<C-n>', '<CMD>bnext<CR>')
+map('<leader>w', '<CMD>close<CR>')
+map('<leader>q', '<CMD>bd<CR>')
+
 -- fzfind key --
 map('<C-p>', '<CMD>Telescope find_files<CR>')
-map('<leader>b', '<CMD>Telescope buffers<CR>')
-map('<leader>he', '<CMD>Telescope help_tags<CR>')
 
--- configs --
-map('<leader>kb', '<CMD>e ~/.config/nvim/lua/keyboard.lua<CR>', 'n')
-map('<leader>vc', '<CMD>e ~/.config/nvim/vimrc<CR>', 'n')
-map('<leader>nc', '<CMD>e ~/.config/nvim/init.lua<CR>', 'n')
-map('<leader>fc', '<CMD>e ~/.config/fish/config.fish<CR>', 'n')
-
--- run --
-map('<leader>r', '<CMD>! %<CR>', 'n')
+-- open config files --
+map('<leader>kb', '<CMD>e ~/.config/nvim/lua/keyboard.lua<CR>')
+map('<leader>vc', '<CMD>e ~/.config/nvim/vimrc<CR>')
+map('<leader>nc', '<CMD>e ~/.config/nvim/init.lua<CR>')
+map('<leader>rc', '<CMD>e ~/.bashrc<CR>')
 
 -- competitive programming shortcuts --
-map('<F10>', '<CMD>term ~/Competitive/run %<CR>i', 'n')
-map('<leader>sk', '<CMD>term python3 ~/Competitive/submit.py %<CR>i', 'n')
-map('<leader>tp', '<CMD>r ~/Competitive/template.cc<CR>ggdd', 'n')
-map('<leader>al', '<CMD>Explore ~/Competitive/algorithms/<CR>', 'n')
-map('<leader>in', '<CMD>e %:h/test.in<CR>', 'n')
-map('<leader>run', '<CMD>e ~/Competitive/run<CR>', 'n')
+map('<F10>', '<CMD>term ~/Competitive/run %<CR>i')
+map('<leader>sk', '<CMD>term python3 ~/Competitive/submit.py %<CR>i')
+map('<leader>tp', '<CMD>r ~/Competitive/template.cc<CR>ggdd')
+map('<leader>al', '<CMD>Explore ~/Competitive/algorithms/<CR>')
+map('<leader>in', '<CMD>e %:h/test.in<CR>')
+map('<leader>run', '<CMD>e ~/Competitive/run<CR>')
 
--- python scripts --
--- map('<leader>ipy', '<CMD>TermExec cmd="python %"<CR>', 'n')
-map('<leader>py', '<CMD>TermExec cmd="python %"<CR>', 'n')
-map('<leader>ma', '<CMD>TermExec cmd="manim -pql %"<CR>', 'n')
-
--- fish scripts --
-map('<leader>fi', '<CMD>TermExec cmd="source %"<CR>', 'n')
+-- python --
+-- map('<leader>py', '<CMD>!python %<CR>')
 
 -- rust --
-map('<leader>cr', '<CMD>! cargo run<CR>', 'n')
+-- map('<leader>cr', '<CMD>TermExec cmd="cargo run"<CR>')
+-- map('<leader>cf', '<CMD>TermExec cmd="cargo fmt"<CR>')
+-- map('<leader>cwa', '<CMD>TermExec cmd="wasm-pack build"<CR>')
+
+-- NPM/JS --
+-- map('<leader>nb', '<CMD>TermExec cmd="npm run build"<CR>')
+-- map('<leader>ns', '<CMD>TermExec cmd="npm run serve"<CR>')
 

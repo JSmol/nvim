@@ -2,7 +2,7 @@ set termguicolors
 syntax enable
 
 " python 2 space tab "
-let g:python_recommended_style = 0
+" let g:python_recommended_style = 0
 filetype plugin indent on
 
 " nice stuff "

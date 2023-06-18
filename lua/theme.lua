@@ -1,4 +1,3 @@
-
 local catppuccin = require("catppuccin")
 
 -- configure it

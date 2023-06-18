@@ -64,18 +64,22 @@ cmp.setup({
   }
 })
 
+-- If you want insert `(` after select function or method item
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
+
 -- setup nvim_lsp source
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 require('nvim-treesitter.configs').setup({
-  ensure_installed = {'c', 'javascript', 'lua', 'python', 'html', 'comment'},
+  ensure_installed = {'c', 'typescript', 'javascript', 'lua', 'python', 'html', 'comment', 'rust'},
   highlight = {
     enable = true,
   },
 })
-
--- bracket matching --
-require('nvim-autopairs').setup()
 
 -- lsp config
 local nvim_lsp = require('lspconfig')
@@ -85,11 +89,10 @@ local on_attach = function(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
   -- Mappings.
   local opts = { noremap=true, silent=true }
-  -- buf_set_keymap('n', 'F12', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', '<F1>', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   -- buf_set_keymap('n', '<F4>', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<F12>', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   -- Set autocommands conditional on server_capabilities
   -- if client.resolved_capabilities.document_highlight then
@@ -112,7 +115,6 @@ end
 local servers = { 
   "pyright",
   "tsserver",
-  "texlab",
   "clangd",
   "html"
 }
@@ -130,9 +132,14 @@ rt.setup({
   server = {
     on_attach = function(_, bufnr)
       -- Hover actions
-      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+      local opts = { noremap=true, silent=true }
+      vim.keymap.set('n', '<C-space>', rt.hover_actions.hover_actions, { buffer = bufnr })
+      vim.keymap.set('n', '<F1>', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+      vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+      vim.keymap.set('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+      vim.keymap.set('n', '<leader>gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
       -- Code action groups
-      -- vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+      vim.keymap.set("n", "<Leader>ac", rt.code_action_group.code_action_group, { buffer = bufnr })
     end,
   },
 })

@@ -3,8 +3,11 @@ require('telescope').setup{
   defaults = {
     file_ignore_patterns = {
 
-      -- js
+      -- js/ts/web
       "node_modules",
+      "public",
+      "dist",
+      "pkg",
 
       -- latex
       "%.pdf",
@@ -38,5 +41,4 @@ require('telescope').setup{
     }
   },
 }
-
 
