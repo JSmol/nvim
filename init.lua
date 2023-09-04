@@ -9,16 +9,23 @@
 vim.cmd 'runtime vimrc' 
 require('plugins')
 
-vim.api.nvim_set_option("clipboard","unnamed")
+vim.api.nvim_set_option("clipboard", "unnamed")
+
+require('indent_blankline').setup({
+  char = '│',
+  space_char_blankline = ' ',
+  filetype_exclude = { 'help', 'packer' },
+  buftype_exclude = { 'terminal', 'nofile' },
+})
 
 -- THEME --
 require('theme')
 vim.cmd[[colorscheme catppuccin]]
 
--- Tree config
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-require("nvim-tree").setup()
+-- -- Tree config
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
+-- require("nvim-tree").setup()
 
 require('lsp')
 require('statusline')
@@ -30,6 +37,8 @@ require('terminal')
 
 local g, opt, win = vim.g, vim.o, vim.wo
 local cmd = vim.cmd
+
+vim.opt.cursorline = true
 
 -- cmd("hi! StatusLine gui=underline guibg=NONE")
 -- cmd("hi! StatusLineNC gui=underline guibg=NONE")

@@ -3,29 +3,33 @@
 vim.cmd [[packadd packer.nvim]]
 return require('packer').startup(function()
 
-  -- Packer can manage itself https://github.com/wbthomason/packer.nvim
+  -- https://github.com/wbthomason/packer.nvim
   use 'wbthomason/packer.nvim'
-
-  -- colorscheme --
-  use {
-    'catppuccin/nvim',
-    as = 'catppuccin'
-  }
 
   -- https://github.com/nvim-treesitter/nvim-treesitter
   use 'nvim-treesitter/nvim-treesitter'
 
+  -- https://github.com/catppuccin/nvim
+  use { 'catppuccin/nvim', as = 'catppuccin' }
+
   -- https://github.com/nvim-telescope/telescope.nvim
   use { 'nvim-telescope/telescope.nvim', requires = 'nvim-lua/plenary.nvim' }
 
+  -- https://github.com/numToStr/FTerm.nvim
+  use 'numToStr/FTerm.nvim'
+
   -- https://github.com/nvim-lualine/lualine.nvim
-  use { 'nvim-lualine/lualine.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true} }
+  use { 'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons' } }
+
+  -- https://github.com/nvim-tree/nvim-web-devicons
+  use { 'nvim-tree/nvim-web-devicons' }
 
   -- https://github.com/neovim/nvim-lspconfig
   use 'neovim/nvim-lspconfig'
 
   -- https://github.com/hrsh7th/nvim-cmp
   use 'hrsh7th/nvim-cmp'
+
   -- https://github.com/hrsh7th/cmp-nvim-lsp
   use 'hrsh7th/cmp-nvim-lsp'
 
@@ -33,19 +37,14 @@ return require('packer').startup(function()
   use 'hrsh7th/vim-vsnip'
   use 'hrsh7th/cmp-vsnip'
   use 'hrsh7th/cmp-emoji'
+  use 'kdheepak/cmp-latex-symbols'
 
   -- pairs and indentation guide
+  use 'lukas-reineke/indent-blankline.nvim'
   use { 
     'windwp/nvim-autopairs',
     config = function()
-      require('nvim-autopairs').setup()
-    end
-  }
-
-  use {
-    'lukas-reineke/indent-blankline.nvim', branch = 'master',
-    config = function()
-      require('indent_blankline').setup()
+      require('nvim-autopairs').setup({ })
     end
   }
 
@@ -61,7 +60,7 @@ return require('packer').startup(function()
     require('Comment').setup()
   }
 
-  -- rust things https://github.com/simrat39/rust-tools.nvim
+  -- https://github.com/simrat39/rust-tools.nvim
   use 'simrat39/rust-tools.nvim'
   use {
     'saecki/crates.nvim',
@@ -79,11 +78,14 @@ return require('packer').startup(function()
     end
   }
 
-  use 'nvim-tree/nvim-tree.lua'
-
-  -- config at lua/terminal
-  use 'numToStr/FTerm.nvim'
-
   use 'tikhomirov/vim-glsl'
+
+  -- https://github.com/lewis6991/gitsigns.nvim
+  use {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+        require('gitsigns').setup()
+    end
+  }
 
 end)

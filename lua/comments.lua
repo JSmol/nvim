@@ -12,8 +12,8 @@ require('todo-comments').setup({
     TODO = { icon = " ", color = "info" },
     HACK = { icon = " ", color = "warning" },
     WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-    PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-    NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+    PERF = { icon = "󰅒 ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+    NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
     TESTING = { icon = "ﭧ ", color = "hint", alt = { "TEST", "TESTS" } },
   },
   merge_keywords = true, -- when true, custom keywords will be merged with the defaults

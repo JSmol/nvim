@@ -1,10 +1,11 @@
 local fterm = require('FTerm')
+
 fterm.setup({
   dimensions = {
     height = 0.9,
     width = 0.9
   },
-  border = "rounded"
+  border = 'single'
 })
 
 -- map keys helper --
@@ -27,11 +28,11 @@ local function map(lhs, rhs)
   vim.api.nvim_set_keymap('t', lhs, rhs, {noremap=true, silent=true})
 end
 
-vim.api.nvim_create_user_command('Run', function(opts)
-  fterm.run(opts.args)
+vim.api.nvim_create_user_command('Run', function()
+  fterm.run('./run.sh')
 end, { })
+map('<leader>r', '<CMD>Run<CR>')
 
--- commands to run in main terminal --
 vim.api.nvim_create_user_command('Build', function()
   fterm.run({'./build.sh'})
 end, { })
@@ -55,12 +56,12 @@ end, { })
 map('<leader>cwa', '<CMD>WasmBuild<CR>')
 
 ----- JAVASCRIPT -----
--- exit when process completes --
 vim.api.nvim_create_user_command('NpmBuild', function()
   fterm.run({'npm', 'run', 'build'})
 end, { })
 map('<leader>nb', '<CMD>NpmBuild<CR>')
 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 -- toggle long running command in new terminal --
 local watch_term = fterm:new({ft = 'ft_watch', cmd = "npm run watch"})
 vim.api.nvim_create_user_command('Watch', function()

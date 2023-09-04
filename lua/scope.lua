@@ -1,44 +1,33 @@
--- FZF / SEARCH
-require('telescope').setup{
+require('telescope').setup({
   defaults = {
     file_ignore_patterns = {
 
-      -- js/ts/web
       "node_modules",
       "public",
       "dist",
       "pkg",
 
-      -- latex
-      "%.pdf",
-      "%.fls",
-      "%.aux",
-      "%.log",
-      "%.fdb_latexmk",
-      "%.synctex.gz",
-
-      -- python
       "env",
       "media",
       "typings",
       "__pycache__",
 
-      -- rust
       "target",
+      "%.wav",
 
-      "Images"
     }
   },
   pickers = {
-    find_files = {
-      theme = "ivy",
-    },
-    buffers = {
-      theme = "ivy",
-    },
-    help_tags = {
-      theme = "ivy",
-    }
+    find_files = { theme = "ivy"},
+    help_tags = { theme = "ivy" },
+    buffers = { theme = "ivy" },
+    treesitter = { },
+    git_stash = { },
+    git_status = { },
+    git_branches = { },
+    git_branches = { },
+    -- lsp_references = { theme = 'cursor' },
+    -- lsp_definitions = { theme = 'cursor' },
   },
-}
+})
 

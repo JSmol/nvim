@@ -1,25 +1,34 @@
 local catppuccin = require("catppuccin")
 
--- configure it
+local mocha = require('catppuccin.palettes').get_palette('mocha')
+
 catppuccin.setup({
+  flavour = 'mocha',
+  custom_highlights = function(colors)
+    return {
+      Folded = { fg = colors.lavender },
+      CursorLine = { bg = colors.base },
+      FloatBorder = { fg = colors.rose },
+    }
+  end,
   transparent_background = true,
   term_colors = false,
   styles = {
-    -- comments = "italic",
-    -- functions = "italic",
-    -- keywords = "italic",
-    -- strings = "NONE",
-    -- variables = "NONE",
+    comments = { "italic" },
+    functions = { "bold" },
+    keywords = { "bold" },
+    -- strings = { "NONE" },
+    -- variables = { "NONE" },
   },
   integrations = {
     treesitter = true,
     native_lsp = {
       enabled = true,
       virtual_text = {
-        -- errors = "italic",
-        -- hints = "italic",
-        -- warnings = "italic",
-        -- information = "italic",
+        errors = { "bold" },
+        hints = { "bold" },
+        warnings = { "bold" },
+        information = { "bold" },
       },
       underlines = {
         -- errors = "underline",
@@ -28,30 +37,13 @@ catppuccin.setup({
         -- information = "underline",
       },
     },
-    lsp_trouble = false,
-    lsp_saga = false,
-    gitgutter = false,
-    gitsigns = false,
-    telescope = false,
-    nvimtree = {
-      enabled = false,
-      show_root = false,
-    },
-    which_key = false,
+    lsp_trouble = true,
+    gitsigns = true,
+    telescope = true,
     indent_blankline = {
-      enabled = false,
+      enabled = true,
       colored_indent_levels = false,
     },
-    dashboard = false,
-    neogit = false,
-    vim_sneak = false,
-    fern = false,
-    barbar = false,
-    bufferline = false,
-    markdown = false,
-    lightspeed = false,
-    ts_rainbow = false,
-    hop = false,
-    cmp = false,
+    markdown = true,
   },
 })

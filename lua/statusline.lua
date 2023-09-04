@@ -24,8 +24,8 @@ require('lualine').setup({
       }
     },
     -- lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_x = {'filetype'},
-    lualine_y = {},
+    lualine_x = {},
+    lualine_y = {'filetype'},
     lualine_z = {
       'location'
     }
@@ -48,7 +48,6 @@ require('lualine').setup({
         use_mode_colors = true
       }
     },
-    -- lualine_b = {},
     lualine_b = {
     },
     -- lualine_c = {},
