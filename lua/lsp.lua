@@ -1,6 +1,6 @@
 -- LSP AND COMPLETION
 
-vim.diagnostic.config({ virtual_text = false })
+-- vim.diagnostic.config({ virtual_text = false })
 
 -- cmp setup
 vim.o.completeopt = "menu,menuone,noselect"
@@ -34,63 +34,93 @@ cmp.setup({
 -- If you want insert `(` after select function or method item
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on(
-  'confirm_done',
-  cmp_autopairs.on_confirm_done()
+    'confirm_done',
+    cmp_autopairs.on_confirm_done()
 )
 
 -- setup nvim_lsp source
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 require('nvim-treesitter.configs').setup({
-  ensure_installed = {'c', 'typescript', 'javascript', 'lua', 'python', 'html', 'css', 'comment', 'rust'},
-  highlight = {
-    enable = true,
-  },
+    ensure_installed = {'c', 'typescript', 'javascript', 'lua', 'python', 'html', 'css', 'comment', 'rust'},
+    highlight = { enable = true, },
 })
 
 -- lsp config
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-  local opts = { noremap=true, silent=true }
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  buf_set_keymap('n', '<F1>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<F8>', '<Cmd>Telescope lsp_references<CR>', opts)
-  buf_set_keymap('n', '<F12>', '<cmd>Telescope lsp_definitions<CR>', opts)
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+    local opts = { noremap=true, silent=true }
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+    buf_set_keymap('n', '<F1>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    buf_set_keymap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', '<F8>', '<Cmd>Telescope lsp_references<CR>', opts)
+    buf_set_keymap('n', '<F12>', '<cmd>Telescope lsp_definitions<CR>', opts)
 end
 
 -- Use a loop to conveniently both setup defined servers 
 -- and map buffer local keybindings when the language server attaches
-local servers = { 
-  "tsserver",
-  "pyright",
-  "cssls",
-  "html",
+local servers = {
+    "tsserver",
+    "pyright",
+    "cssls",
+    "html",
+    "clangd",
 }
 
 for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup({
-    on_attach = on_attach,
-    capabilities = capabilities
-  })
+    nvim_lsp[lsp].setup({
+        on_attach = on_attach,
+        capabilities = capabilities
+    })
 end
 
--- Rust Tools...
+-- Rust Tools --
 local rt = require("rust-tools")
 rt.setup({
-  server = {
-    on_attach = function(_, bufnr)
-      -- Hover actions
-      local opts = { noremap=true, silent=true }
-      vim.keymap.set('n', '<F1>', rt.hover_actions.hover_actions, { buffer = bufnr })
-      vim.keymap.set('n', '<F2>', '<CMD>lua vim.lsp.buf.rename()<CR>', opts)
-      vim.keymap.set('n', '<F8>', '<Cmd>Telescope lsp_references<CR>', opts)
-      vim.keymap.set('n', '<F12>', '<Cmd>Telescope lsp_definitions<CR>', opts)
-      -- Code action groups
-      vim.keymap.set("n", "<Leader>ac", rt.code_action_group.code_action_group, { buffer = bufnr })
-    end,
-  },
+    server = {
+        on_attach = function(_, bufnr)
+            -- Hover actions
+            local opts = { noremap=true, silent=true }
+            vim.keymap.set('n', '<F1>', rt.hover_actions.hover_actions, { buffer = bufnr })
+            vim.keymap.set('n', '<F2>', '<CMD>lua vim.lsp.buf.rename()<CR>', opts)
+            vim.keymap.set('n', '<F8>', '<Cmd>Telescope lsp_references<CR>', opts)
+            vim.keymap.set('n', '<F12>', '<Cmd>Telescope lsp_definitions<CR>', opts)
+            -- Code action groups
+            vim.keymap.set("n", "<Leader>ac", rt.code_action_group.code_action_group, { buffer = bufnr })
+        end,
+    },
+})
+
+-- lua nvim --
+nvim_lsp.lua_ls.setup({
+    on_init = function(client)
+        local path = client.workspace_folders[1].name
+        if not vim.loop.fs_stat(path..'/.luarc.json') and not vim.loop.fs_stat(path..'/.luarc.jsonc') then
+          client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
+            Lua = {
+              runtime = {
+                -- Tell the language server which version of Lua you're using
+                -- (most likely LuaJIT in the case of Neovim)
+                version = 'LuaJIT'
+              },
+              -- Make the server aware of Neovim runtime files
+              workspace = {
+                checkThirdParty = false,
+                library = {
+                  vim.env.VIMRUNTIME
+                  -- "${3rd}/luv/library"
+                  -- "${3rd}/busted/library",
+                }
+                -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+                -- library = vim.api.nvim_get_runtime_file("", true)
+              }
+            }
+          })
+          client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+        end
+        return true
+    end
 })
 

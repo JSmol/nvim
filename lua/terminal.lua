@@ -10,16 +10,17 @@ fterm.setup({
 
 -- map keys helper --
 local function map(lhs, rhs)
-  vim.api.nvim_set_keymap('n', lhs, rhs, {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', lhs, rhs, {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('t', lhs, rhs, {noremap=true, silent=true})
+    vim.api.nvim_set_keymap('n', lhs, rhs, {noremap=true, silent=true})
+    vim.api.nvim_set_keymap('i', lhs, rhs, {noremap=true, silent=true})
+    vim.api.nvim_set_keymap('t', lhs, rhs, {noremap=true, silent=true})
 end
 
 -- toggle term --
-vim.api.nvim_create_user_command('FTermToggle', fterm.toggle, { bang = true })
-map('<C-o>', '<CMD>FTermToggle<CR>', 'n')
-map('<C-o>', '<CMD>FTermToggle<CR>', 'i')
-map('<C-o>', '<CMD>FTermToggle<CR>', 't')
+vim.api.nvim_create_user_command('FTermToggle', 
+    function() 
+        fterm.toggle()
+    end, { bang = true })
+map('<C-o>', '<CMD>FTermToggle<CR>')
 
 -- map keys helper --
 local function map(lhs, rhs)
