@@ -1,78 +1,62 @@
-local fterm = require('FTerm')
-
-fterm.setup({
-  dimensions = {
-    height = 0.9,
-    width = 0.9
-  },
-  border = 'single'
-})
-
--- map keys helper --
-local function map(lhs, rhs)
-    vim.api.nvim_set_keymap('n', lhs, rhs, {noremap=true, silent=true})
-    vim.api.nvim_set_keymap('i', lhs, rhs, {noremap=true, silent=true})
-    vim.api.nvim_set_keymap('t', lhs, rhs, {noremap=true, silent=true})
-end
-
 -- toggle term --
-vim.api.nvim_create_user_command('FTermToggle', 
-    function() 
-        fterm.toggle()
-    end, { bang = true })
-map('<C-o>', '<CMD>FTermToggle<CR>')
+local terms = {}
+local prebuf = 0
 
--- map keys helper --
-local function map(lhs, rhs)
-  vim.api.nvim_set_keymap('n', lhs, rhs, {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('i', lhs, rhs, {noremap=true, silent=true})
-  vim.api.nvim_set_keymap('t', lhs, rhs, {noremap=true, silent=true})
+local function create_term(name)
+    terms[name] = {}
+    terms[name].buf = vim.api.nvim_create_buf(true, false)
+    vim.api.nvim_set_current_buf(terms[name].buf)
+    terms[name].term = vim.fn.termopen('bash', {
+        on_exit = function()
+            terms[name] = nil
+        end
+    })
 end
 
-vim.api.nvim_create_user_command('Run', function()
-  fterm.run('./run.sh')
-end, { })
-map('<leader>r', '<CMD>Run<CR>')
+local function toggle_term(name)
+    local curbuf = vim.api.nvim_get_current_buf()
+    if terms[name] then
+        if terms[name].buf == curbuf then
+            vim.api.nvim_set_current_buf(prebuf)
+        else
+            prebuf = curbuf
+            vim.api.nvim_set_current_buf(terms[name].buf)
+            vim.cmd('startinsert')
+        end
+    else
+        prebuf = curbuf
+        create_term(name)
+        vim.cmd('startinsert')
+    end
+end
 
-vim.api.nvim_create_user_command('Build', function()
-  fterm.run({'./build.sh'})
-end, { })
-map('<leader>b', '<CMD>Build<CR>')
+local function run(name, cmd)
+    local curbuf = vim.api.nvim_get_current_buf()
+    if not terms[name] then
+        create_term(name)
+    end
+    if terms[name].buf ~= curbuf then
+        vim.api.nvim_set_current_buf(terms[name].buf)
+        vim.cmd('startinsert')
+    end
+    vim.api.nvim_chan_send(
+        terms[name].term,
+        cmd .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+    )
+end
 
------ RUST -----
--- commands to run in main terminal --
-vim.api.nvim_create_user_command('CargoRun', function()
-  fterm.run({'cargo', 'run'})
-end, { })
-map('<leader>cr', '<CMD>CargoRun<CR>')
+vim.keymap.set('n', '<C-o>', function() toggle_term('main') end)
+vim.keymap.set('v', '<C-o>', function() toggle_term('main') end)
+vim.keymap.set('t', '<C-o>', function() toggle_term('main') end)
+vim.keymap.set('i', '<C-o>', function() toggle_term('main') end)
 
-vim.api.nvim_create_user_command('CargoFmt', function()
-  fterm.run({'cargo', 'fmt'})
-end, { })
-map('<leader>cf', '<CMD>CargoFmt<CR>')
+vim.keymap.set('n', '<leader>r', function() run('main', './run.sh') end)
+vim.keymap.set('n', '<leader>b', function() run('main', './build.sh') end)
 
-vim.api.nvim_create_user_command('WasmBuild', function()
-  fterm.run({'wasm-pack', 'build'})
-end, { })
-map('<leader>cwa', '<CMD>WasmBuild<CR>')
+vim.keymap.set('n', '<leader>cr', function() run('rust', 'cargo run') end)
+vim.keymap.set('n', '<leader>cb', function() run('rust', 'cargo build') end)
 
------ JAVASCRIPT -----
-vim.api.nvim_create_user_command('NpmBuild', function()
-  fterm.run({'npm', 'run', 'build'})
-end, { })
-map('<leader>nb', '<CMD>NpmBuild<CR>')
-
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
--- toggle long running command in new terminal --
-local watch_term = fterm:new({ft = 'ft_watch', cmd = "npm run watch"})
-vim.api.nvim_create_user_command('Watch', function()
-  watch_term:toggle();
-end, { })
-map('<leader>nw', '<CMD>Watch<CR>')
-
-local serve_term = fterm:new({ft = 'ft_serve', cmd = "npm run serve"})
-vim.api.nvim_create_user_command('Serve', function()
-  serve_term:toggle();
-end, { })
-map('<leader>ns', '<CMD>Serve<CR>')
+vim.keymap.set('n', '<leader>nb', function() run('node', 'npm run build') end)
+vim.keymap.set('n', '<leader>nw', function() run('node', 'npm run watch') end)
+vim.keymap.set('n', '<leader>nw', function() run('node', 'npm run serve') end)
 

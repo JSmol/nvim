@@ -1,6 +1,8 @@
 set termguicolors
 syntax enable
 
+set so=999
+
 " python 2 space tab "
 " let g:python_recommended_style = 0
 filetype plugin indent on
