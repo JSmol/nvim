@@ -34,6 +34,7 @@ local function grapple_tags()
     for _, v in ipairs(tags) do
         local fp = Path:new(v.file_path)
         fp = fp:make_relative(scope_path)
+        fp = vim.fn.pathshorten(vim.fn.fnamemodify(fp, ':p:.'))
         if v.key == key then
             str = str .. modules.highlight.format_highlight('a', true) .. ' ' .. v.key .. ': ' .. fp .. ' '
         else
@@ -47,7 +48,7 @@ require('lualine').setup({
 
   options = {
     icons_enabled = true,
-    theme = 'catppuccin',
+    theme = 'auto',
     component_separators = { left = ' ', right = ''},
     section_separators = { left = ' ', right = ' '},
     disabled_filetypes = {},

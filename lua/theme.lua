@@ -3,6 +3,13 @@ local mocha = require('catppuccin.palettes').get_palette('mocha')
 
 catppuccin.setup({
     flavour = 'mocha',
+    color_overrides = {
+        mocha = {
+            -- base = "#ff0000",
+            -- mantle = "#242424",
+            -- crust = "#474747",
+        },
+    },
     custom_highlights = function(colors)
         return {
             Folded = { fg = colors.lavender },
@@ -36,3 +43,6 @@ catppuccin.setup({
         markdown = true,
     },
 })
+
+vim.cmd[[colorscheme catppuccin]]
+

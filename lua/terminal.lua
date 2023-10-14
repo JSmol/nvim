@@ -37,26 +37,37 @@ local function run(name, cmd)
     end
     if terms[name].buf ~= curbuf then
         vim.api.nvim_set_current_buf(terms[name].buf)
-        vim.cmd('startinsert')
+        -- vim.cmd('startinsert')
     end
     vim.api.nvim_chan_send(
         terms[name].term,
-        cmd .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+        cmd .. ' || exit' .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
     )
 end
 
-vim.keymap.set('n', '<C-o>', function() toggle_term('main') end)
-vim.keymap.set('v', '<C-o>', function() toggle_term('main') end)
-vim.keymap.set('t', '<C-o>', function() toggle_term('main') end)
-vim.keymap.set('i', '<C-o>', function() toggle_term('main') end)
+vim.keymap.set('n', '<leader>tt', function() run('tcomp', './run.sh ' .. vim.fn.expand('%')) end)
+-- '<CMD>term ./run.sh %<CR>i')
 
-vim.keymap.set('n', '<leader>r', function() run('main', './run.sh') end)
-vim.keymap.set('n', '<leader>b', function() run('main', './build.sh') end)
+vim.keymap.set('n', '<leader>o', function() toggle_term('main') end)
+vim.keymap.set('n', '<leader>sh1', function() toggle_term('scratch1') end)
+vim.keymap.set('n', '<leader>sh2', function() toggle_term('scratch2') end)
+vim.keymap.set('n', '<leader>sh3', function() toggle_term('scratch3') end)
+vim.keymap.set('n', '<leader>sh4', function() toggle_term('scratch4') end)
+vim.keymap.set('n', '<leader>sh5', function() toggle_term('scratch5') end)
+vim.keymap.set('n', '<leader>sh6', function() toggle_term('scratch6') end)
+vim.keymap.set('n', '<leader>sh7', function() toggle_term('scratch7') end)
+vim.keymap.set('n', '<leader>sh8', function() toggle_term('scratch8') end)
+vim.keymap.set('n', '<leader>sh9', function() toggle_term('scratch9') end)
+vim.keymap.set('n', '<leader>sh0', function() toggle_term('scratch0') end)
+
+vim.keymap.set('n', '<leader>r', function()
+    run('run', '(./build.sh % || exit) && ./out && exit')
+end)
 
 vim.keymap.set('n', '<leader>cr', function() run('rust', 'cargo run') end)
 vim.keymap.set('n', '<leader>cb', function() run('rust', 'cargo build') end)
 
-vim.keymap.set('n', '<leader>nb', function() run('node', 'npm run build') end)
-vim.keymap.set('n', '<leader>nw', function() run('node', 'npm run watch') end)
-vim.keymap.set('n', '<leader>nw', function() run('node', 'npm run serve') end)
+vim.keymap.set('n', '<leader>nb', function() run('nb', 'npm run build') end)
+vim.keymap.set('n', '<leader>nw', function() run('nw', 'npm run watch') end)
+vim.keymap.set('n', '<leader>ns', function() run('ns', 'npm run serve') end)
 

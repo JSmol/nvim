@@ -1,7 +1,15 @@
 set termguicolors
 syntax enable
 
+nnoremap <space> <Nop>
+let mapleader=' '
+
 set so=999
+
+set clipboard+=unnamedplus
+
+" in your .vimrc (_vimrc for Windows)
+autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
 
 " python 2 space tab "
 " let g:python_recommended_style = 0
@@ -34,13 +42,6 @@ set timeout timeoutlen=5000 ttimeoutlen=100
 let g:netrw_banner = 0        " no banner
 let g:netrw_liststyle = 3     " tree style listing
 let g:netrw_dirhistmax = 0    " no netrw history
-
-" panes "
-map <C-\> :vsp<CR>
-map <C-k> :wincmd k<CR>
-map <C-j> :wincmd j<CR>
-map <C-h> :wincmd h<CR>
-map <C-l> :wincmd l<CR>
 
 set splitbelow
 set splitright

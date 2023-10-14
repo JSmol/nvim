@@ -1,57 +1,42 @@
--- This file can be loaded by calling `lua require('plugins')` from your init.vim
--- Only required if you have packer configured as `opt`
-vim.cmd [[packadd packer.nvim]]
-return require('packer').startup(function(use)
+    return require('lazy').setup({
 
-    -- https://github.com/wbthomason/packer.nvim
-    use 'wbthomason/packer.nvim'
+    { 'catppuccin/nvim', name = 'catppuccin' },
 
-    -- https://github.com/nvim-lua/plenary.nvim
-    use 'nvim-lua/plenary.nvim'
+    'nvim-lua/plenary.nvim',
+    'nvim-tree/nvim-web-devicons',
+    'nvim-treesitter/nvim-treesitter',
+    'nvim-lualine/lualine.nvim',
+    'lukas-reineke/indent-blankline.nvim',
+    'easymotion/vim-easymotion',
+    'tikhomirov/vim-glsl',
 
-    -- https://github.com/catppuccin/nvim
-    use { 'catppuccin/nvim', as = 'catppuccin' }
+    -- lsp and completion --
+    'neovim/nvim-lspconfig',
+    'simrat39/rust-tools.nvim',
+    'hrsh7th/nvim-cmp',
+    'hrsh7th/vim-vsnip',
+    'hrsh7th/cmp-vsnip',
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-emoji',
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-cmdline',
+    'kdheepak/cmp-latex-symbols',
 
-    -- https://github.com/nvim-tree/nvim-web-devicons
-    use { 'nvim-tree/nvim-web-devicons' }
-
-    -- https://github.com/nvim-treesitter/nvim-treesitter
-    use 'nvim-treesitter/nvim-treesitter'
-    use 'tikhomirov/vim-glsl'
-
-    -- https://github.com/hrsh7th/nvim-cmp
-    use {
-        'hrsh7th/nvim-cmp',
-        requires = {
-            'neovim/nvim-lspconfig',
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/vim-vsnip',
-            'hrsh7th/cmp-vsnip',
-            'hrsh7th/cmp-emoji',
-            'kdheepak/cmp-latex-symbols',
-        }
-    }
-
-    -- https://github.com/simrat39/rust-tools.nvim
-    use 'simrat39/rust-tools.nvim'
-    use {
-        'saecki/crates.nvim',
-        tag = 'v0.3.0',
+    {
+        'numToStr/Comment.nvim',
         config = function()
-            require('crates').setup()
-        end,
-    }
+            require('Comment').setup()
+        end
+    },
 
-    -- https://github.com/cbochs/grapple.nvim
-    use {
+    {
         "cbochs/grapple.nvim",
         config = function()
             require("grapple").setup()
         end
-    }
+    },
 
-    -- https://github.com/nvim-telescope/telescope.nvim
-    use {
+    {
         'nvim-telescope/telescope.nvim',
         config = function()
             local telescope = require('telescope')
@@ -84,27 +69,17 @@ return require('packer').startup(function(use)
                 }
             })
         end
-    }
+    },
 
-    -- https://github.com/nvim-lualine/lualine.nvim
-    use 'nvim-lualine/lualine.nvim'
-
-    -- https://github.com/lukas-reineke/indent-blankline.nvim
-    use 'lukas-reineke/indent-blankline.nvim'
-    use {
+    {
         'windwp/nvim-autopairs',
         config = function()
             require('nvim-autopairs').setup()
         end
-    }
+    },
 
-    -- https://github.com/easymotion/vim-easymotion
-    use { 'easymotion/vim-easymotion' }
-
-    -- https://github.com/folke/todo-comments.nvim
-    use {
+    {
         'folke/todo-comments.nvim',
-        requires = 'nvim-lua/plenary.nvim',
         config = function()
             require('todo-comments').setup({
                 signs = true, -- show icons in the signs column
@@ -149,38 +124,20 @@ return require('packer').startup(function(use)
                 }
             })
         end
-    }
+    },
 
-    -- https://github.com/numToStr/Comment.nvim
-    use {
-        'numToStr/Comment.nvim',
-        config = function()
-            require('Comment').setup()
-        end
-    }
-
-    use {
+    {
         'folke/zen-mode.nvim',
         config = function()
           require("zen-mode").setup()
         end
-    }
+    },
 
-    -- https://github.com/lewis6991/gitsigns.nvim
-    use {
+    {
         'lewis6991/gitsigns.nvim',
         config = function()
             require('gitsigns').setup()
         end
-    }
+    },
 
-    -- https://github.com/folke/trouble.nvim
-    use {
-        "folke/trouble.nvim",
-        config = function()
-            require("trouble").setup()
-        end
-    }
-
-end)
-
+})

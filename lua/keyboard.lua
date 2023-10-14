@@ -9,14 +9,30 @@ local function map(lhs, rhs, mode)
   )
 end
 
--- they changed Y to y$ for reasons --
-map('Y', 'yy', 'n')
+-- terminal --
+map('<Esc>', '<C-\\><C-n>', 't') -- enter normal mode with esc in terminals
 
 -- random tings --
 map('<leader>fp', 'gF', 'n')
+-- map('<leader>py', '<CMD>!python %<CR>')
+map('<leader>sf', '<CMD>w<CR>')
+
+-- map('<leader>d', '<CMD>e ~/.config/nvim/readme.md<CR>')
+
+-- z e n m o d e --
+map('<leader>z', '<CMD>ZenMode<CR>')
+
+-- panes --
+map('<leader>\\', '<CMD>vsp<CR>')
+map('<leader>-', '<CMD>sp<CR>')
+map('<leader>kk', '<CMD>wincmd k<CR><ESC>')
+map('<leader>jj', '<CMD>wincmd j<CR><ESC>')
+map('<leader>hh', '<CMD>wincmd h<CR><ESC>')
+map('<leader>ll', '<CMD>wincmd l<CR><ESC>')
+
 
 -- telescope --
-map('<C-p>', '<CMD>Telescope find_files<CR>')
+map('<leader>p', '<CMD>Telescope find_files<CR>')
 map('<leader>ls', '<CMD>Telescope buffers<CR>')
 map('<leader>lg', '<CMD>Telescope live_grep<CR>')
 map('<leader>he', '<CMD>Telescope help_tags<CR>')
@@ -41,17 +57,15 @@ vim.keymap.set('n', '<leader>8', function() grapple.select({ key = 8 }) end)
 vim.keymap.set('n', '<leader>9', function() grapple.select({ key = 9 }) end)
 vim.keymap.set('n', '<leader>0', function() grapple.select({ key = 10}) end)
 
--- terminal --
-map('<Esc>', '<C-\\><C-n>', 't') -- enter normal mode with esc in terminals
-map('<leader>sh', '<CMD>term<CR>i')
-
--- z e n m o d e --
-map('<leader>z', '<CMD>ZenMode<CR>')
-
--- folds --
+-- mo folds mo problems --
 map('<leader>fz', 'za')
 map('<leader>fa', '<CMD>set foldlevel=0<CR>')
 map('<leader>fs', '<CMD>set foldlevel=99<CR>')
+map('<leader>f1', '<CMD>set foldlevel=1<CR>')
+map('<leader>f2', '<CMD>set foldlevel=2<CR>')
+map('<leader>f3', '<CMD>set foldlevel=3<CR>')
+map('<leader>f4', '<CMD>set foldlevel=4<CR>')
+map('<leader>f5', '<CMD>set foldlevel=5<CR>')
 
 -- manage buffers / screens --
 map('<leader>w', '<CMD>close<CR>')
@@ -59,15 +73,10 @@ map('<leader>q', '<CMD>bd<CR>')
 
 -- open config files --
 map('<leader>kb', '<CMD>e ~/.config/nvim/lua/keyboard.lua<CR>')
-map('<leader>nc', '<CMD>e ~/.config/nvim/init.lua<CR>')
-map('<leader>vc', '<CMD>e ~/.config/nvim/vimrc<CR>')
+map('<leader>nv', '<CMD>e ~/.config/nvim/readme.md<CR>')
 
 -- competitive programming shortcuts --
-map('<F10>', '<CMD>term ~/Competitive/run %<CR>i')
-map('<leader>sk', '<CMD>term python3 ~/Competitive/submit.py %<CR>i')
-map('<leader>tp', '<CMD>r ~/Competitive/template.cc<CR>ggdd')
+map('<leader>sk', '<CMD>term python ~/projects/kattis-cli/submit.py %<CR>i')
+map('<leader>tp', '<CMD>r ~/codeforces/template.cc<CR>ggdd')
 map('<leader>in', '<CMD>e %:h/test.in<CR>')
-
--- run python file --
-map('<leader>py', '<CMD>!python %<CR>')
 

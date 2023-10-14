@@ -6,29 +6,49 @@
 vim.o.completeopt = "menu,menuone,noselect"
 local cmp = require("cmp")
 cmp.setup({
-  snippet = {
-    -- REQUIRED - you must specify a snippet engine
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-    end,
-  },
-  mapping = {
-    ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }, {i, s}),
-    ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }, {i, s}),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm({
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+    snippet = {
+        -- REQUIRED - you must specify a snippet engine
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        end,
+    },
+    mapping = {
+        ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }, {i, s}),
+        ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }, {i, s}),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.close(),
+        ['<CR>'] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+        }),
+    },
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'vsnip' },
+        { name = 'buffer' },
+        { name = 'path' },
+        { name = 'emoji' },
+        { name = 'crates' },
+        { name = 'latex_symbols', strategy = 1 },
     }),
-  },
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' },
-    { name = 'emoji' },
-    { name = 'crates' },
-    { name = 'latex_symbols', strategy = 1 },
-  }),
+})
+
+-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
+})
+
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        { name = 'cmdline' }
+    })
 })
 
 -- If you want insert `(` after select function or method item
@@ -53,10 +73,10 @@ local on_attach = function(client, bufnr)
     buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
     local opts = { noremap=true, silent=true }
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    buf_set_keymap('n', '<F1>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    buf_set_keymap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    buf_set_keymap('n', '<F8>', '<Cmd>Telescope lsp_references<CR>', opts)
-    buf_set_keymap('n', '<F12>', '<cmd>Telescope lsp_definitions<CR>', opts)
+    buf_set_keymap('n', '<leader>ha', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', '<leader>gr', '<Cmd>Telescope lsp_references<CR>', opts)
+    buf_set_keymap('n', '<leader>gd', '<cmd>Telescope lsp_definitions<CR>', opts)
 end
 
 -- Use a loop to conveniently both setup defined servers 
@@ -83,12 +103,12 @@ rt.setup({
         on_attach = function(_, bufnr)
             -- Hover actions
             local opts = { noremap=true, silent=true }
-            vim.keymap.set('n', '<F1>', rt.hover_actions.hover_actions, { buffer = bufnr })
-            vim.keymap.set('n', '<F2>', '<CMD>lua vim.lsp.buf.rename()<CR>', opts)
-            vim.keymap.set('n', '<F8>', '<Cmd>Telescope lsp_references<CR>', opts)
-            vim.keymap.set('n', '<F12>', '<Cmd>Telescope lsp_definitions<CR>', opts)
+            vim.keymap.set('n', '<leader>ha', rt.hover_actions.hover_actions, { buffer = bufnr })
+            vim.keymap.set('n', '<leader>rn', '<CMD>lua vim.lsp.buf.rename()<CR>', opts)
+            vim.keymap.set('n', '<leader>gr', '<Cmd>Telescope lsp_references<CR>', opts)
+            vim.keymap.set('n', '<leader>gd', '<Cmd>Telescope lsp_definitions<CR>', opts)
             -- Code action groups
-            vim.keymap.set("n", "<Leader>ac", rt.code_action_group.code_action_group, { buffer = bufnr })
+            vim.keymap.set("n", "<Leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr })
         end,
     },
 })
@@ -98,27 +118,17 @@ nvim_lsp.lua_ls.setup({
     on_init = function(client)
         local path = client.workspace_folders[1].name
         if not vim.loop.fs_stat(path..'/.luarc.json') and not vim.loop.fs_stat(path..'/.luarc.jsonc') then
-          client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
-            Lua = {
-              runtime = {
-                -- Tell the language server which version of Lua you're using
-                -- (most likely LuaJIT in the case of Neovim)
-                version = 'LuaJIT'
-              },
-              -- Make the server aware of Neovim runtime files
-              workspace = {
-                checkThirdParty = false,
-                library = {
-                  vim.env.VIMRUNTIME
-                  -- "${3rd}/luv/library"
-                  -- "${3rd}/busted/library",
+            client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
+                Lua = {
+                    runtime = { version = 'LuaJIT' },
+                    -- Make the server aware of Neovim runtime files
+                    workspace = {
+                        checkThirdParty = false,
+                        library = { vim.env.VIMRUNTIME }
+                    }
                 }
-                -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
-                -- library = vim.api.nvim_get_runtime_file("", true)
-              }
-            }
-          })
-          client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+            })
+            client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
         end
         return true
     end
