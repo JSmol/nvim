@@ -37,7 +37,7 @@ local function run(name, cmd)
     end
     if terms[name].buf ~= curbuf then
         vim.api.nvim_set_current_buf(terms[name].buf)
-        -- vim.cmd('startinsert')
+        vim.cmd('startinsert')
     end
     vim.api.nvim_chan_send(
         terms[name].term,

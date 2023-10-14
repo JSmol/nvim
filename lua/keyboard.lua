@@ -12,9 +12,6 @@ end
 -- terminal --
 map('<Esc>', '<C-\\><C-n>', 't') -- enter normal mode with esc in terminals
 
--- random tings --
-map('<leader>fp', 'gF', 'n')
--- map('<leader>py', '<CMD>!python %<CR>')
 map('<leader>sf', '<CMD>w<CR>')
 
 -- map('<leader>d', '<CMD>e ~/.config/nvim/readme.md<CR>')
@@ -29,7 +26,6 @@ map('<leader>kk', '<CMD>wincmd k<CR><ESC>')
 map('<leader>jj', '<CMD>wincmd j<CR><ESC>')
 map('<leader>hh', '<CMD>wincmd h<CR><ESC>')
 map('<leader>ll', '<CMD>wincmd l<CR><ESC>')
-
 
 -- telescope --
 map('<leader>p', '<CMD>Telescope find_files<CR>')
