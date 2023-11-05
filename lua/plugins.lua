@@ -7,7 +7,6 @@
     'nvim-treesitter/nvim-treesitter',
     'nvim-lualine/lualine.nvim',
     'lukas-reineke/indent-blankline.nvim',
-    'easymotion/vim-easymotion',
     'tikhomirov/vim-glsl',
 
     -- lsp and completion --
@@ -21,6 +20,42 @@
     'hrsh7th/cmp-path',
     'hrsh7th/cmp-cmdline',
     'kdheepak/cmp-latex-symbols',
+
+    {
+        "epwalsh/obsidian.nvim",
+        lazy = true,
+        event = {
+            "BufReadPre " .. vim.fn.expand "~" .. "/obsidian/**.md",
+            "BufNewFile " .. vim.fn.expand "~" .. "/obsidian/**.md",
+        },
+        opts = {
+            workspaces = {
+                {
+                    name = "DnD",
+                    path = "~/obsidian/DnD/",
+                },
+            },
+            mappings = { },
+            note_id_func = function(title)
+                return title
+            end,
+        }
+    },
+
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end,
+        opts = {
+            window = {
+                border = "single", -- none, single, double, shadow
+                -- position = "top", -- bottom, top
+            }
+        }
+    },
 
     {
         'numToStr/Comment.nvim',
@@ -65,6 +100,7 @@
                         "%.wav",
                         "%.jpg",
                         "%.png",
+                        "%.csv",
                     }
                 }
             })

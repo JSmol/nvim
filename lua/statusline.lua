@@ -33,12 +33,14 @@ local function grapple_tags()
     local str = ''
     for _, v in ipairs(tags) do
         local fp = Path:new(v.file_path)
+        local b = vim.fn.bufnr(v.file_path)
         fp = fp:make_relative(scope_path)
         fp = vim.fn.pathshorten(vim.fn.fnamemodify(fp, ':p:.'))
+        local is_modified = b >= 0 and vim.api.nvim_buf_get_option(b, 'modified')
         if v.key == key then
-            str = str .. modules.highlight.format_highlight('a', true) .. ' ' .. v.key .. ': ' .. fp .. ' '
+            str = str .. modules.highlight.format_highlight('a', true) .. ' ' .. v.key .. ': ' .. (is_modified and '󰴓 ' or '') .. fp .. ' '
         else
-            str = str .. modules.highlight.format_highlight('a', false) .. ' ' .. v.key .. ': ' .. fp .. ' '
+            str = str .. modules.highlight.format_highlight('a', false) .. ' ' .. v.key .. ': ' .. (is_modified and '󰴓 ' or '') .. fp .. ' '
         end
     end
     return str

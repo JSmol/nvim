@@ -23,8 +23,20 @@ end
 vim.opt.rtp:prepend(lazypath)
 require('plugins')
 
+require("nvim-treesitter.configs").setup({
+  ensure_installed = { "markdown", "markdown_inline", ... },
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = { "markdown" },
+  },
+})
+
+-- terminal --
+vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap=true, silent=true }) -- enter normal mode with esc in terminals
+
 -- vim.api.nvim_set_option("clipboard", "unnamed")
 
+-- indentation guides --
 require('ibl').setup()
 
 -- THEME --
@@ -33,8 +45,8 @@ require('theme')
 require('terminal')
 
 require('lsp')
-require('statusline')
 require('keyboard')
+require('statusline')
 
 -- hide line numbers in terminal windows --
 vim.cmd('autocmd TermOpen * setlocal nonumber norelativenumber')
