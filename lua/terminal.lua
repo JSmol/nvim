@@ -1,7 +1,12 @@
--- toggle term --
+-- normal mode --
+vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap=true, silent=true }) -- enter normal mode with esc in terminals
+
+-- hide line numbers in terminal windows --
+vim.cmd('autocmd TermOpen * setlocal nonumber norelativenumber')
+
+-- toggle terms --
 local terms = {}
 local prebuf = 0
-
 local function create_term(name)
     terms[name] = {}
     terms[name].buf = vim.api.nvim_create_buf(true, false)
@@ -58,7 +63,8 @@ local wk = require('which-key')
 
 wk.register({
     ['<leader>o'] = { function() toggle_term('main') end, 'Toggle Term' },
-    ['<leader>b'] = { function() run('build', '(./build.sh % || exit) && test -f ./out && ./out') end, 'Run `build.sh` %' },
+    ['<leader>b'] = { function() run('build', '(./build.sh % || exit)') end, 'Run `build.sh`' },
+    -- ['<leader>b'] = { function() run('build', '(./build.sh % || exit) && test -f ./out && ./out') end, 'Run `build.sh` %' },
     ['<leader>tt'] = { function() run('tcomp', './run.sh ' .. vim.fn.expand('%')) end, 'Run `run.sh %` in tcomp' },
 })
 

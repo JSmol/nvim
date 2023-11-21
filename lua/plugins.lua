@@ -25,14 +25,14 @@
         "epwalsh/obsidian.nvim",
         lazy = true,
         event = {
-            "BufReadPre " .. vim.fn.expand "~" .. "/obsidian/**.md",
-            "BufNewFile " .. vim.fn.expand "~" .. "/obsidian/**.md",
+            "BufReadPre " .. "/mnt/c/Users/josip/Documents/Obsidian/**.md",
+            "BufNewFile " .. "/mnt/c/Users/josip/Documents/Obsidian/**.md",
         },
         opts = {
             workspaces = {
                 {
                     name = "DnD",
-                    path = "~/obsidian/DnD/",
+                    path = "/mnt/c/Users/josip/Documents/Obsidian"
                 },
             },
             mappings = { },

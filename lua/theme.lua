@@ -1,6 +1,12 @@
 local catppuccin = require("catppuccin")
 local mocha = require('catppuccin.palettes').get_palette('mocha')
 
+vim.opt.cursorline = true
+
+-- indentation guides --
+require('ibl').setup()
+
+
 catppuccin.setup({
     flavour = 'mocha',
     color_overrides = {
@@ -23,8 +29,6 @@ catppuccin.setup({
         comments = { "italic" },
         functions = { "bold" },
         keywords = { "bold" },
-        -- strings = { "NONE" },
-        -- variables = { "NONE" },
     },
     integrations = {
         cmp = true,

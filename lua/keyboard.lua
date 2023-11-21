@@ -1,5 +1,26 @@
-
 local wk = require('which-key')
+
+function vchat(mode, lang)
+    local cr = vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+    local cmd = 'tgpt --mode=' .. mode .. ' --lang=' .. lang .. ' | tee /tmp/res' 
+    return function()
+        vim.api.nvim_feedkeys(':w !' .. cmd .. cr, 'v', false)
+        vim.api.nvim_feedkeys("'>", 'n', false)
+        if mode == 'document' or mode == 'refactor' then
+            vim.api.nvim_feedkeys('gvdk', 'n', false)
+        end
+        vim.api.nvim_feedkeys(':r /tmp/res' .. cr, 'n', false)
+    end
+end
+
+-- TODO: gpt things
+wk.register({
+    ['<leader>csp'] = { vchat('suggest', 'python'), 'Code Suggest Python', mode = 'v' },
+
+    ['<leader>csr'] = { vchat('suggest', 'rust'), 'Code Suggest Rust', mode = 'v' },
+    ['<leader>crr'] = { vchat('refactor', 'rust'), 'Code Refactor Rust', mode = 'v' },
+    ['<leader>cdr'] = { vchat('document', 'rust'), 'Code Document Rust', mode = 'v' }
+})
 
 wk.register({
     ['<leader>sf'] = { '<CMD>w<CR>', 'Save File' },
@@ -20,13 +41,12 @@ wk.register({
 -- telescope --
 wk.register({
     ['<leader>'] = {
-        p = { '<CMD>Telescope find_files<CR>', 'Fine Files' },
-        l = {
-            s = { '<CMD>Telescope buffers<CR>', 'List Buffers' },
-            g = { '<CMD>Telescope live_grep<CR>', 'Live Grep' },
-        },
+        p = { '<CMD>Telescope find_files<CR>', 'Find Files' },
+        ['ls'] = { '<CMD>Telescope buffers<CR>', 'List Buffers' },
+        ['lg'] = { '<CMD>Telescope live_grep<CR>', 'Live Grep' },
         ['he'] = { '<CMD>Telescope help_tags<CR>', 'Search Help' },
         ['ss'] = { '<CMD>Telescope treesitter<CR>', 'Search Symbols' },
+        ['td'] = { '<CMD>TodoTelescope<CR>', 'Search Symbols' },
         g = {
             name = '+git',
             s = { '<CMD>Telescope git_status<CR>', 'Git Status' },
@@ -53,7 +73,7 @@ wk.register({
     ['<leader>0'] = { function() grapple.select({ key = 0 }) end, 'Goto Mark' },
 })
 
--- mo folds mo problems --
+-- folds --
 wk.register({
     ['<leader>f'] = {
         name = 'folds',
@@ -84,7 +104,7 @@ wk.register({
     ['<leader>kb'] = { '<CMD>e ~/.config/nvim/lua/keyboard.lua<CR>', 'Open Neovim keyboard.lua' },
     ['<leader>nv'] = { '<CMD>e ~/.config/nvim/readme.md<CR>', 'Open Neovim readme.md' },
     ['<leader>sk'] = { '<CMD>term python ~/projects/kattis-cli/submit.py %<CR>i', 'Send current file to kattis.com' },
-    ['<leader>tp'] = { '<CMD>r ~/codeforces/template.cc<CR>ggdd', 'Copy C++ Template' },
+    ['<leader>tp'] = { '<CMD>r ~/competitive-programming/template.cc<CR>ggdd', 'Copy C++ Template' },
     ['<leader>in'] = { '<CMD>e %:h/test.in<CR>', 'Open test.in' },
 })
 

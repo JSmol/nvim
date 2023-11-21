@@ -1,6 +1,6 @@
 -- LSP AND COMPLETION
 
--- vim.diagnostic.config({ virtual_text = false })
+vim.diagnostic.config({ virtual_text = false })
 
 -- cmp setup
 vim.o.completeopt = "menu,menuone,noselect"
@@ -44,11 +44,10 @@ cmp.setup.cmdline({ '/', '?' }, {
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' }
-    }, {
-        { name = 'cmdline' }
-    })
+    sources = cmp.config.sources(
+        -- { { name = 'path' } },
+        { { name = 'cmdline' } }
+    )
 })
 
 -- If you want insert `(` after select function or method item
@@ -58,12 +57,26 @@ cmp.event:on(
     cmp_autopairs.on_confirm_done()
 )
 
--- setup nvim_lsp source
+-- setup nvim_lsp source --
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 require('nvim-treesitter.configs').setup({
-    ensure_installed = { 'c', 'typescript', 'javascript', 'lua', 'python', 'html', 'css', 'comment', 'rust' },
-    highlight = { enable = true, },
+    ensure_installed = { 
+        'typescript',
+        'javascript',
+        'markdown',
+        'comment',
+        'lua',
+        'python',
+        'html',
+        'css',
+        'c',
+        'rust' 
+    },
+    highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = { 'markdown' },
+    },
 })
 
 -- lsp config
@@ -112,26 +125,5 @@ rt.setup({
             })
         end,
     },
-})
-
--- lua nvim --
-nvim_lsp.lua_ls.setup({
-    on_init = function(client)
-        local path = client.workspace_folders[1].name
-        if not vim.loop.fs_stat(path..'/.luarc.json') and not vim.loop.fs_stat(path..'/.luarc.jsonc') then
-            client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
-                Lua = {
-                    runtime = { version = 'LuaJIT' },
-                    -- Make the server aware of Neovim runtime files
-                    workspace = {
-                        checkThirdParty = false,
-                        library = { vim.env.VIMRUNTIME }
-                    }
-                }
-            })
-            client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
-        end
-        return true
-    end
 })
 
