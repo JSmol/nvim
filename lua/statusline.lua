@@ -17,7 +17,7 @@ local function lsp_progress()
     -- local ms = vim.loop.hrtime() / 1000000
     -- local frame = math.floor(ms / 120) % #spinners
     -- return table.concat(status, " | ") .. " " .. spinners[frame + 1]
-    return "🐢"
+    return "🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢"
 end
 
 local modules = require('lualine_require').lazy_require {
@@ -49,62 +49,72 @@ end
 
 require('lualine').setup({
 
-  options = {
-    icons_enabled = true,
-    theme = 'auto',
-    component_separators = { left = ' ', right = ''},
-    section_separators = { left = ' ', right = ' '},
-    disabled_filetypes = {},
-    always_divide_middle = true,
-  },
-
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {
-      {
-        'filename',
-        path=1
-      }
+    options = {
+        icons_enabled = true,
+        theme = 'auto',
+        component_separators = { left = ' ', right = ''},
+        section_separators = { left = ' ', right = ' '},
+        disabled_filetypes = {},
+        always_divide_middle = true,
+        globalstatus = true,
     },
-    -- lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_x = {lsp_progress},
-    lualine_y = {'filetype'},
-    lualine_z = {'location'},
-  },
 
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {},
-  },
+    sections = {
+        lualine_a = {'mode'},
+        lualine_b = {
+            'branch', 'diff', 'diagnostics',
+        },
+        lualine_c = {
+            'filetype',
+            {
+                'filename',
+                path=1
+            }
+        },
+        -- lualine_x = {'encoding', 'fileformat', 'filetype'},
+        lualine_x = {lsp_progress},
+        lualine_y = {},
+        lualine_z = {'location'},
+    },
 
-  tabline = {
-    -- lualine_a = {
-      -- {
-      --   'buffers',
-      --   show_filename_only = false,
-      --   use_mode_colors = true,
-      -- }
-    -- },
-    lualine_a = {grapple_tags},
-    lualine_b = {},
-    lualine_c = {},
-    -- lualine_x = {},
-    -- lualine_y = {},
-    lualine_z = {
-      {
-        'tabs',
-        use_mode_colors = true
-      }
-    }
-  },
+    inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {'filename'},
+        lualine_x = {'location'},
+        lualine_y = {},
+        lualine_z = {},
+    },
 
-  winbar = {},
+    tabline = {
+        -- lualine_a = {
+            -- {
+            --     'buffers',
+            --     show_filename_only = false,
+            --     use_mode_colors = true,
+            -- }
+        -- },
+        lualine_a = {grapple_tags},
+        lualine_b = {},
+        lualine_c = {},
+        -- lualine_x = {},
+        -- lualine_y = {},
+        lualine_z = {
+            {
+                'tabs',
+                use_mode_colors = true
+            }
+        }
+    },
 
-  extensions = {}
+    winbar = {
+        -- lualine_a = {'filename'},
+    },
+
+    inactive_winbar = {
+        -- lualine_c = {'filename'},
+    },
+
+    extensions = {}
 
 })

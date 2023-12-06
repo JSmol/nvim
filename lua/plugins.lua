@@ -1,4 +1,4 @@
-    return require('lazy').setup({
+return require('lazy').setup({
 
     { 'catppuccin/nvim', name = 'catppuccin' },
 

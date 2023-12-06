@@ -1,6 +1,6 @@
 -- LSP AND COMPLETION
 
-vim.diagnostic.config({ virtual_text = false })
+-- vim.diagnostic.config({ virtual_text = false })
 
 -- cmp setup
 vim.o.completeopt = "menu,menuone,noselect"
@@ -66,6 +66,7 @@ require('nvim-treesitter.configs').setup({
         'javascript',
         'markdown',
         'comment',
+        'haskell',
         'lua',
         'python',
         'html',
@@ -97,10 +98,11 @@ end
 -- and map buffer local keybindings when the language server attaches
 local servers = {
     "tsserver",
-    "pyright",
+    -- "pyright", really slow lmao
     "cssls",
     "html",
     "clangd",
+    "hls",
 }
 
 for _, lsp in ipairs(servers) do

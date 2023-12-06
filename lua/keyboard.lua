@@ -1,29 +1,8 @@
 local wk = require('which-key')
 
-function vchat(mode, lang)
-    local cr = vim.api.nvim_replace_termcodes('<CR>', true, true, true)
-    local cmd = 'tgpt --mode=' .. mode .. ' --lang=' .. lang .. ' | tee /tmp/res' 
-    return function()
-        vim.api.nvim_feedkeys(':w !' .. cmd .. cr, 'v', false)
-        vim.api.nvim_feedkeys("'>", 'n', false)
-        if mode == 'document' or mode == 'refactor' then
-            vim.api.nvim_feedkeys('gvdk', 'n', false)
-        end
-        vim.api.nvim_feedkeys(':r /tmp/res' .. cr, 'n', false)
-    end
-end
-
--- TODO: gpt things
-wk.register({
-    ['<leader>csp'] = { vchat('suggest', 'python'), 'Code Suggest Python', mode = 'v' },
-
-    ['<leader>csr'] = { vchat('suggest', 'rust'), 'Code Suggest Rust', mode = 'v' },
-    ['<leader>crr'] = { vchat('refactor', 'rust'), 'Code Refactor Rust', mode = 'v' },
-    ['<leader>cdr'] = { vchat('document', 'rust'), 'Code Document Rust', mode = 'v' }
-})
-
 wk.register({
     ['<leader>sf'] = { '<CMD>w<CR>', 'Save File' },
+    ['<leader>xx'] = { '<CMD>source %<CR>', 'Run Current File' },
     ['<leader>q']  = { '<CMD>bd<CR>', 'Kill Buffer' },
     ['<leader>w']  = { '<CMD>close<CR>', 'Close Window' },
     ['<leader>z']  = { '<CMD>ZenMode<CR>', 'Toggle ZenMode' },
@@ -51,7 +30,7 @@ wk.register({
             name = '+git',
             s = { '<CMD>Telescope git_status<CR>', 'Git Status' },
             t = { '<CMD>Telescope git_stash<CR>', 'Git Stash' },
-            b = { '<CMD>Telescope git_branches<CR>', 'Git Branches' },
+            -- b = { '<CMD>Telescope git_branches<CR>', 'Git Branches' },
         }
     }
 })

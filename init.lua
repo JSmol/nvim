@@ -19,6 +19,7 @@ require('plugins')
 -- THEME --
 require('theme')
 require('terminal')
+require('gpt')
 require('lsp')
 require('keyboard')
 require('statusline')
