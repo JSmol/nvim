@@ -104,12 +104,25 @@ local function toggle_term(name)
     end
 end
 
+-- reload current .hs file into ghci on write (if ghci is open) --
 vim.api.nvim_create_autocmd('BufWritePost', {
     group = vim.api.nvim_create_augroup('haskell', { clear = true }),
     pattern = '*.hs',
     callback = function()
         if terms['ghci'] then
             run('ghci', ':load ' .. vim.fn.expand('%'), true, 12)
+        end
+    end
+})
+
+-- TODO: aucmd for ipython and .py files
+vim.api.nvim_create_autocmd('BufWritePost', {
+    group = vim.api.nvim_create_augroup('ipython', { clear = true }),
+    pattern = '*.py',
+    callback = function()
+        local cr = vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+        if terms['ipython'] then
+            run('ipython', '%load ' .. vim.fn.expand('%') .. cr, true, 12)
         end
     end
 })
@@ -121,7 +134,7 @@ wk.register({
     ['<leader>b'] = { function() run('build', './build.sh') end, 'Run `build.sh`' },
     ['<leader>rt'] = { function() run('tcomp', './run.sh ' .. vim.fn.expand('%'), false, 12) end, 'Run `run.sh %`' },
     ['<leader>ipy'] = { function() run('ipython', 'ipython', true, 12) end, 'Open IPython' },
-    ['<leader>ihs'] = { function() run('ghci', 'ghci', true, 12) end, 'Open GHCI' },
+    ['<leader>hsi'] = { function() run('ghci', 'ghci', true, 12) end, 'Open GHCI' },
     ['<leader>hsl'] = { function() run('ghci', ':load ' .. vim.fn.expand('%'), true, 12) end, ':load %' },
     ['<leader>hsr'] = { function() run('ghci', vim.fn.expand('<cword>'), true, 12) end, 'Run function under cursor' },
 })

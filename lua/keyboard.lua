@@ -8,11 +8,13 @@ wk.register({
     ['<leader>z']  = { '<CMD>ZenMode<CR>', 'Toggle ZenMode' },
 })
 
+-- windows / tabs / panes --
 wk.register({
     ['<leader>kk'] = { '<CMD>wincmd k<CR><ESC>', 'Move up' },
     ['<leader>jj'] = { '<CMD>wincmd j<CR><ESC>', 'Move down' },
     ['<leader>hh'] = { '<CMD>wincmd h<CR><ESC>', 'Move left' },
     ['<leader>ll'] = { '<CMD>wincmd l<CR><ESC>', 'Move right' },
+    ['<leader>tn'] = { '<CMD>tabnew<CR>', 'New Tab' },
     ['<leader>\\'] = { '<CMD>vsp<CR>', 'V Split' },
     ['<leader>-']  = { '<CMD>sp<CR>', 'H Split'  },
 })
