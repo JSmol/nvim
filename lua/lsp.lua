@@ -1,30 +1,42 @@
--- LSP AND COMPLETION
-
--- vim.diagnostic.config({ virtual_text = false })
+vim.diagnostic.config({ virtual_text = true })
 
 -- cmp setup
-vim.o.completeopt = "menu,menuone,noselect"
-local cmp = require("cmp")
+vim.o.completeopt = 'menu,menuone,noselect'
+local cmp = require('cmp')
+local luasnip = require('luasnip')
 cmp.setup({
     snippet = {
-        -- REQUIRED - you must specify a snippet engine
         expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+            require('luasnip').lsp_expand(args.body)
         end,
     },
     mapping = {
-        ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }, {i, s}),
-        ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }, {i, s}),
+        ['<C-j>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }, {i, s}),
+        ['<C-k>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }, {i, s}),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.close(),
         ['<CR>'] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
         }),
+        ['<C-l>'] = cmp.mapping(function(fallback)
+            if luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+        ['<C-h>'] = cmp.mapping(function(fallback)
+            if luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
     },
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'vsnip' },
+        { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
         { name = 'emoji' },
@@ -45,7 +57,7 @@ cmp.setup.cmdline({ '/', '?' }, {
 cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources(
-        -- { { name = 'path' } },
+        { { name = 'path' } },
         { { name = 'cmdline' } }
     )
 })
@@ -72,8 +84,9 @@ require('nvim-treesitter.configs').setup({
         'html',
         'css',
         'c',
-        'rust' 
+        'rust'
     },
+    auto_install = true,
     highlight = {
         enable = true,
         additional_vim_regex_highlighting = { 'markdown' },
@@ -84,13 +97,12 @@ require('nvim-treesitter.configs').setup({
 local wk = require('which-key')
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
-    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.lsp.omnifunc')
     wk.register({
-        ['<leader>ha'] = { '<CMD>lua vim.lsp.buf.hover()<CR>', 'Hover' },
         ['<leader>rn'] = { '<CMD>lua vim.lsp.buf.rename()<CR>', 'Rename Symbol' },
         ['<leader>gr'] = { '<CMD>Telescope lsp_references<CR>', 'Goto References' },
         ['<leader>gd'] = { '<CMD>Telescope lsp_definitions<CR>', 'Goto Definitions' },
+        ['<leader>gi'] = { '<CMD>Telescope lsp_implementations<CR>', 'Goto Implementations' },
     })
 end
 
@@ -98,11 +110,10 @@ end
 -- and map buffer local keybindings when the language server attaches
 local servers = {
     "tsserver",
-    -- "pyright", really slow lmao
+    "pyright",
     "cssls",
     "html",
     "clangd",
-    "hls",
 }
 
 for _, lsp in ipairs(servers) do
@@ -117,13 +128,10 @@ local rt = require("rust-tools")
 rt.setup({
     server = {
         on_attach = function(client, bufnr)
-            -- local opts = { noremap=true, silent=true }
+            on_attach(client, bufnr)
             wk.register({
-                ['<leader>ha'] = { rt.hover_actions.hover_actions, 'Hover', buffer = bufnr },
-                ['<leader>rn'] = { '<CMD>lua vim.lsp.buf.rename()<CR>', 'Rename Symbol' },
-                ['<leader>gr'] = { '<CMD>Telescope lsp_references<CR>', 'Goto References' },
-                ['<leader>gd'] = { '<CMD>Telescope lsp_definitions<CR>', 'Goto Definitions' },
-                ['<leader>ca'] = { rt.code_action_group.code_action_group, 'Coda Actions', buffer = bufnr },
+                ['<C-k>'] = { rt.hover_actions.hover_actions, 'Hover', buffer = bufnr },
+                ['<C-/>'] = { rt.code_action_group.code_action_group, 'Coda Actions', buffer = bufnr },
             })
         end,
     },

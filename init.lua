@@ -1,6 +1,8 @@
 -- general vim options & plugins --
 vim.cmd('runtime vimrc')
 
+vim.g.editorconfig = false
+
 -- bootstrap plugins --
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -19,8 +21,8 @@ require('plugins')
 -- THEME --
 require('theme')
 require('terminal')
-require('gpt')
 require('lsp')
+require('gdb')
 require('keyboard')
 require('statusline')
 

@@ -7,55 +7,19 @@ return require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     'nvim-lualine/lualine.nvim',
     'lukas-reineke/indent-blankline.nvim',
-    'tikhomirov/vim-glsl',
 
     -- lsp and completion --
     'neovim/nvim-lspconfig',
     'simrat39/rust-tools.nvim',
     'hrsh7th/nvim-cmp',
-    'hrsh7th/vim-vsnip',
-    'hrsh7th/cmp-vsnip',
+    'L3MON4D3/LuaSnip',
+    'saadparwaiz1/cmp_luasnip',
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/cmp-emoji',
     'hrsh7th/cmp-path',
     'hrsh7th/cmp-cmdline',
     'kdheepak/cmp-latex-symbols',
-
-    {
-        "epwalsh/obsidian.nvim",
-        lazy = true,
-        event = {
-            "BufReadPre " .. "/mnt/c/Users/josip/Documents/Obsidian/**.md",
-            "BufNewFile " .. "/mnt/c/Users/josip/Documents/Obsidian/**.md",
-        },
-        opts = {
-            workspaces = {
-                {
-                    name = "DnD",
-                    path = "/mnt/c/Users/josip/Documents/Obsidian"
-                },
-            },
-            mappings = { },
-            note_id_func = function(title)
-                return title
-            end,
-        }
-    },
-
-    {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        init = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 300
-        end,
-        opts = {
-            window = {
-                border = "single", -- none, single, double, shadow
-                -- position = "top", -- bottom, top
-            }
-        }
-    },
+    'windwp/nvim-autopairs',
 
     {
         'numToStr/Comment.nvim',
@@ -65,10 +29,34 @@ return require('lazy').setup({
     },
 
     {
-        "cbochs/grapple.nvim",
+        'lewis6991/gitsigns.nvim',
         config = function()
-            require("grapple").setup()
+            require('gitsigns').setup()
         end
+    },
+
+    {
+        "folke/trouble.nvim",
+        config = function()
+            require('trouble').setup({
+                padding = false
+            })
+        end
+    },
+
+    {
+        'folke/which-key.nvim',
+        event = 'VeryLazy',
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 400
+        end,
+        opts = {
+            window = {
+                border = 'single', -- none, single, double, shadow
+                position = 'bottom', -- bottom, top
+            }
+        }
     },
 
     {
@@ -78,39 +66,32 @@ return require('lazy').setup({
             local actions = require('telescope.actions')
             telescope.setup({
                 defaults = {
-                    prompt_prefix = " ",
-                    path_display = { "smart" },
+                    prompt_prefix = ' ',
+                    path_display = { 'smart' },
                     mappings = {
                         i = {
-                            ["<ESC>"] = actions.close,
-                            ["<Tab>"] = actions.move_selection_next,
-                            ["<S-Tab>"] = actions.move_selection_previous,
+                            ['<ESC>'] = actions.close,
+                            ['<Tab>'] = actions.move_selection_next,
+                            ['<S-Tab>'] = actions.move_selection_previous,
                         }
                     },
                     file_ignore_patterns = {
-                        "node_modules",
-                        "public",
-                        "dist",
-                        "pkg",
-                        "env",
-                        "media",
-                        "typings",
-                        "__pycache__",
-                        "target",
-                        "%.wav",
-                        "%.jpg",
-                        "%.png",
-                        "%.csv",
+                        'node_modules',
+                        'public',
+                        'dist',
+                        'pkg',
+                        'env',
+                        'media',
+                        'typings',
+                        '__pycache__',
+                        'target',
+                        '%.wav',
+                        '%.jpg',
+                        '%.png',
+                        '%.csv',
                     }
                 }
             })
-        end
-    },
-
-    {
-        'windwp/nvim-autopairs',
-        config = function()
-            require('nvim-autopairs').setup()
         end
     },
 
@@ -122,58 +103,43 @@ return require('lazy').setup({
                 sign_priority = 8, -- sign priority
                 -- keywords recognized as todo comments
                 keywords = {
-                    FIX = { icon = " ", color = "error", alt = { "FIX", "BUG", "ISSUE" } },
-                    TODO = { icon = " ", color = "info" },
-                    HACK = { icon = " ", color = "warning" },
-                    WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-                    PERF = { icon = "󰅒 ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-                    NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-                    TEST = { icon = "󰙨 ", color = "hint", alt = { "TESTING", "TESTS" } },
+                    FIX = { icon = ' ', color = 'error', alt = { 'FIX', 'BUG', 'ISSUE' } },
+                    TODO = { icon = ' ', color = 'info' },
+                    HACK = { icon = ' ', color = 'warning' },
+                    WARN = { icon = ' ', color = 'warning', alt = { 'WARNING', 'XXX' } },
+                    PERF = { icon = '󰅒 ', alt = { 'OPTIM', 'PERFORMANCE', 'OPTIMIZE' } },
+                    NOTE = { icon = ' ', color = 'hint', alt = { 'INFO' } },
+                    TEST = { icon = '󰙨 ', color = 'hint', alt = { 'TESTING', 'TESTS' } },
                 },
                 merge_keywords = true,
                 highlight = {
-                    before = "",
-                    keyword = "bg",
-                    after = "fg",
+                    before = '',
+                    keyword = 'bg',
+                    after = 'fg',
                     pattern = [[.*<(KEYWORDS)\s*:]],
                     comments_only = true,
                     max_line_len = 400,
                     exclude = {},
                 },
                 colors = {
-                    error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-                    warning = { "DiagnosticWarning", "WarningMsg", "#FBBF24" },
-                    info = { "DiagnosticInfo", "#2563EB" },
-                    hint = { "DiagnosticHint", "#10B981" },
-                    default = { "Identifier", "#7C3AED" },
+                    error = { 'DiagnosticError', 'ErrorMsg', '#DC2626' },
+                    warning = { 'DiagnosticWarning', 'WarningMsg', '#FBBF24' },
+                    info = { 'DiagnosticInfo', '#2563EB' },
+                    hint = { 'DiagnosticHint', '#10B981' },
+                    default = { 'Identifier', '#7C3AED' },
                 },
                 search = {
-                    command = "rg",
+                    command = 'rg',
                     args = {
-                      "--color=never",
-                      "--no-heading",
-                      "--with-filename",
-                      "--line-number",
-                      "--column",
+                      '--color=never',
+                      '--no-heading',
+                      '--with-filename',
+                      '--line-number',
+                      '--column',
                     },
-                    pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+                    pattern = [[\b(KEYWORDS):]],
                 }
             })
         end
     },
-
-    {
-        'folke/zen-mode.nvim',
-        config = function()
-          require("zen-mode").setup()
-        end
-    },
-
-    {
-        'lewis6991/gitsigns.nvim',
-        config = function()
-            require('gitsigns').setup()
-        end
-    },
-
 })

@@ -4,8 +4,6 @@ syntax enable
 nnoremap <space> <Nop>
 let mapleader=' '
 
-set so=999
-
 set clipboard+=unnamedplus
 
 " in your .vimrc (_vimrc for Windows)
@@ -16,8 +14,7 @@ autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
 filetype plugin indent on
 
 " nice stuff "
-" set wrap is default "
-" set nowrap
+set nowrap
 set hidden
 set nobackup
 set nowritebackup
@@ -45,18 +42,4 @@ let g:netrw_dirhistmax = 0    " no netrw history
 
 set splitbelow
 set splitright
-
-" tex spell checker "
-au Filetype tex set spell
-
-" motion "
-" nmap s <Plug>(easymotion-s)
-" map  / <Plug>(easymotion-sn)
-" omap / <Plug>(easymotion-tn)
-
-" These `n` & `N` mappings are options. You do not have to map `n` & `N` to EasyMotion.
-" Without these mappings, `n` & `N` works fine. (These mappings just provide
-" different highlight method and have some other features )
-" map  n <Plug>(easymotion-next)
-" map  N <Plug>(easymotion-prev)
 

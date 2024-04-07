@@ -6,7 +6,6 @@ vim.opt.cursorline = true
 -- indentation guides --
 require('ibl').setup()
 
-
 catppuccin.setup({
     flavour = 'mocha',
     color_overrides = {
@@ -48,5 +47,4 @@ catppuccin.setup({
     },
 })
 
-vim.cmd[[colorscheme catppuccin]]
-
+vim.cmd('colorscheme catppuccin')
