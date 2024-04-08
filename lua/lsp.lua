@@ -73,18 +73,12 @@ cmp.event:on(
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 require('nvim-treesitter.configs').setup({
-    ensure_installed = { 
-        'typescript',
-        'javascript',
-        'markdown',
-        'comment',
-        'haskell',
-        'lua',
-        'python',
-        'html',
-        'css',
-        'c',
-        'rust'
+    ensure_installed = {
+        'asm', 'bash', 'c', 'cmake', 'comment', 'cpp', 'css', 'csv', 'diff', 
+        'disassembly', 'dockerfile', 'glsl', 'haskell', 'html', 'javascript',
+        'jq', 'json', 'julia', 'latex', 'llvm', 'lua', 'make', 'markdown', 
+        'markdownd_inline', 'mlir', 'nix', 'printf', 'python', 'rust', 
+        'tablegen', 'toml', 'tsx', 'typescript', 'vim', 'vimdoc', 
     },
     auto_install = true,
     highlight = {
@@ -110,9 +104,9 @@ end
 -- and map buffer local keybindings when the language server attaches
 local servers = {
     "tsserver",
-    "pyright",
     "cssls",
     "html",
+    "pyright",
     "clangd",
 }
 
