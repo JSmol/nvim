@@ -74,10 +74,10 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protoc
 
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
-        'asm', 'bash', 'c', 'cmake', 'comment', 'cpp', 'css', 'csv', 'diff', 
-        'disassembly', 'dockerfile', 'glsl', 'haskell', 'html', 'javascript',
+        'bash', 'c', 'cmake', 'comment', 'cpp', 'css', 'csv', 'diff', 
+        'dockerfile', 'glsl', 'haskell', 'html', 'javascript',
         'jq', 'json', 'julia', 'latex', 'llvm', 'lua', 'make', 'markdown', 
-        'markdownd_inline', 'mlir', 'nix', 'printf', 'python', 'rust', 
+        'mlir', 'nix', 'printf', 'python', 'rust', 
         'tablegen', 'toml', 'tsx', 'typescript', 'vim', 'vimdoc', 
     },
     auto_install = true,
