@@ -13,26 +13,39 @@ local config = {
     },
 }
 
-if vim.fn.filereadable('./gdbconfig.json') > 0 then 
-    local configfile = vim.fn.readfile('./gdbconfig.json')
-    config = vim.fn.json_decode(configfile)
-end
-
 local function start()
-    if (debugger_active) then
-        vim.cmd('Gdb')
-    else
-        vim.cmd('Termdebug')
+  if (debugger_active) then
+    vim.cmd('Gdb')
+  else
+    if #vim.api.nvim_tabpage_list_wins(0) > 1 then 
+      vim.cmd('tabnew')a
     end
+    vim.cmd('LualineRenameTab debugger')
+    vim.cmd('Termdebug')
+  end
 end
 
 local function reload()
-    if (debugger_active) then
-        vim.api.nvim_call_function('TermDebugSendCommand', {'file ' .. config.binary})
-        vim.api.nvim_call_function('TermDebugSendCommand', {
-            'run ' .. table.concat(config.args, ' ') .. " < " .. config.stdin
-        })
+  if (debugger_active) then
+    if vim.fn.filereadable('./gdbconfig.json') > 0 then 
+        local configfile = vim.fn.readfile('./gdbconfig.json')
+        config = vim.fn.json_decode(configfile)
     end
+    vim.api.nvim_call_function('TermDebugSendCommand', {'file ' .. config.binary})
+    local cmd = 'run ' .. table.concat(config.args, ' ')
+    if config.stdin then 
+      cmd = cmd .. " < " .. config.stdin
+    end
+    vim.api.nvim_call_function('TermDebugSendCommand', {cmd})
+  end
+end
+
+function map_gdb_cmd(cmd)
+  return function()
+    if (debugger_active) then
+      vim.api.nvim_call_function('TermDebugSendCommand', {cmd})
+    end
+  end
 end
 
 vim.api.nvim_create_autocmd('User', {

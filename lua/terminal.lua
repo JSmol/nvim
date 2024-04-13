@@ -12,6 +12,10 @@ local function update_cwd(name)
     local tmpfn = '/tmp/termcwd' .. terms[name].term
     vim.api.nvim_chan_send(
         terms[name].term,
+        vim.api.nvim_replace_termcodes('<C-u>', true, true, true)
+    )
+    vim.api.nvim_chan_send(
+        terms[name].term,
         'pwd > ' .. tmpfn .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
     )
     vim.api.nvim_chan_send(
@@ -19,7 +23,7 @@ local function update_cwd(name)
         vim.api.nvim_replace_termcodes('<C-l>', true, true, true)
     )
     vim.cmd('sleep 100m')
-    terms.cwd = vim.fn.readfile(tmpfn)[0]
+    terms.cwd = vim.fn.readfile(tmpfn)[1]
 end
 
 -- create new terminal buffer
@@ -110,7 +114,7 @@ local function find_here()
         if terms[name].buf == buffer then
             update_cwd(name)
             local cwd = terms[name].cwd
-            builtin.find_files({ cwd = cwd[1] })
+            builtin.find_files({ cwd = cwd })
             return
         end
     end
