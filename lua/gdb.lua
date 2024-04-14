@@ -18,7 +18,7 @@ local function start()
     vim.cmd('Gdb')
   else
     if #vim.api.nvim_tabpage_list_wins(0) > 1 then 
-      vim.cmd('tabnew')a
+      vim.cmd('tabnew')
     end
     vim.cmd('LualineRenameTab debugger')
     vim.cmd('Termdebug')
