@@ -28,15 +28,16 @@ end
 local function reload()
   if (debugger_active) then
     if vim.fn.filereadable('./gdbconfig.json') > 0 then 
-        local configfile = vim.fn.readfile('./gdbconfig.json')
-        config = vim.fn.json_decode(configfile)
+      local configfile = vim.fn.readfile('./gdbconfig.json')
+      config = vim.fn.json_decode(configfile)
     end
     vim.api.nvim_call_function('TermDebugSendCommand', {'file ' .. config.binary})
     local cmd = 'run ' .. table.concat(config.args, ' ')
     if config.stdin then 
-      cmd = cmd .. " < " .. config.stdin
+      cmd = cmd .. ' < ' .. config.stdin
     end
     vim.api.nvim_call_function('TermDebugSendCommand', {cmd})
+    vim.cmd('Gdb')
   end
 end
 

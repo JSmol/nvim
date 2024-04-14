@@ -9,78 +9,80 @@ local terms = {}
 local prebuf = 0
 
 local function update_cwd(name)
-    local tmpfn = '/tmp/termcwd' .. terms[name].term
-    vim.api.nvim_chan_send(
-        terms[name].term,
-        vim.api.nvim_replace_termcodes('<C-u>', true, true, true)
-    )
-    vim.api.nvim_chan_send(
-        terms[name].term,
-        'pwd > ' .. tmpfn .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
-    )
-    vim.api.nvim_chan_send(
-        terms[name].term,
-        vim.api.nvim_replace_termcodes('<C-l>', true, true, true)
-    )
-    vim.cmd('sleep 100m')
-    terms.cwd = vim.fn.readfile(tmpfn)[1]
+  local tmpfn = '/tmp/termcwd' .. terms[name].term
+  vim.api.nvim_chan_send(
+    terms[name].term,
+    vim.api.nvim_replace_termcodes('<C-u>', true, true, true)
+  )
+  vim.api.nvim_chan_send(
+    terms[name].term,
+    'pwd > ' .. tmpfn .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+  )
+  vim.api.nvim_chan_send(
+    terms[name].term,
+    vim.api.nvim_replace_termcodes('<C-l>', true, true, true)
+  )
+  vim.cmd('sleep 100m')
+  terms.cwd = vim.fn.readfile(tmpfn)[1]
 end
 
--- create new terminal buffer
+-- create new terminal buffer and tab
 local function create_term(name)
-    local curbuf = vim.api.nvim_get_current_buf()
-    terms[name] = {
-        buf = vim.api.nvim_create_buf(true, false),
-        cwd = vim.fn.getcwd()
-    }
-    vim.api.nvim_set_current_buf(terms[name].buf)
-    terms[name].term = vim.fn.termopen('bash', {
-        on_exit = function()
-            terms[name] = nil
-        end,
-        on_stdout = function(id, data)
-        end
-    })
-    vim.api.nvim_set_current_buf(curbuf)
+  vim.cmd('tabnew')
+  vim.cmd('LualineRenameTab ' .. name)
+  local curbuf = vim.api.nvim_get_current_buf()
+  terms[name] = {
+    buf = vim.api.nvim_create_buf(true, false),
+    cwd = vim.fn.getcwd()
+  }
+  vim.api.nvim_set_current_buf(terms[name].buf)
+  terms[name].term = vim.fn.termopen('bash', {
+    on_exit = function()
+      terms[name] = nil
+    end,
+    on_stdout = function(id, data)
+    end
+  })
+  vim.api.nvim_set_current_buf(curbuf)
 end
 
 -- focus window for term name if it exists
 local function focus_win(name)
-    local wins = vim.api.nvim_list_wins()
-    for i, win in ipairs(wins) do
-        local buf = vim.api.nvim_win_get_buf(win)
-        if terms[name].buf == buf then
-            vim.api.nvim_set_current_win(win)
-            return true
-        end
+  local wins = vim.api.nvim_list_wins()
+  for i, win in ipairs(wins) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if terms[name].buf == buf then
+      vim.api.nvim_set_current_win(win)
+      return true
     end
-    return false
+  end
+  return false
 end
 
 -- open the term
 local function open_term(name)
-    if not focus_win(name) then
-        vim.api.nvim_set_current_buf(terms[name].buf)
-    end
+  if not focus_win(name) then
+    vim.api.nvim_set_current_buf(terms[name].buf)
+  end
 end
 
 -- run a command in a named terminal --
 local function run(name, cmd)
-    if not terms[name] then
-        create_term(name)
-    end
-    open_term(name)
-    vim.api.nvim_chan_send(
-        terms[name].term,
-        cmd .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
-    )
+  if not terms[name] then
+    create_term(name)
+  end
+  open_term(name)
+  vim.api.nvim_chan_send(
+    terms[name].term,
+    cmd .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+  )
 end
 
 local function toggle_term(name)
-    if not terms[name] then
-        create_term(name)
-    end
-    open_term(name)
+  if not terms[name] then
+    create_term(name)
+  end
+  open_term(name)
 end
 
 -- reload current .hs file into ghci on write (if ghci is open) --
@@ -125,7 +127,7 @@ end
 local wk = require('which-key')
 wk.register({
     ['<leader>o'] = { function() toggle_term('MAIN') end, 'Toggle Term' },
-    ['<leader>b'] = { function() run('BUILD', './build.sh') end, 'Run `build.sh`' },
+    ['<leader>b'] = { function() run('BUILD', './build.sh ' .. vim.fn.expand('%')) end, 'Run `build.sh`' },
     ['<leader>fh'] = { find_here, 'Find Files Here' },
 })
 

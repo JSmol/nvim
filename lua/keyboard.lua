@@ -14,6 +14,16 @@ wk.register({
     ['<leader>tn'] = { '<CMD>tabnew<CR>', 'New Tab' },
     ['<leader>\\'] = { '<CMD>vsp<CR>', 'V Split' },
     ['<leader>-']  = { '<CMD>sp<CR>', 'H Split'  },
+    ['<leader>1']  = { '1gt', 'Goto Tab', mode = n },
+    ['<leader>2']  = { '2gt', 'Goto Tab', mode = n },
+    ['<leader>3']  = { '3gt', 'Goto Tab', mode = n },
+    ['<leader>4']  = { '4gt', 'Goto Tab', mode = n },
+    ['<leader>5']  = { '5gt', 'Goto Tab', mode = n },
+    ['<leader>6']  = { '6gt', 'Goto Tab', mode = n },
+    ['<leader>7']  = { '7gt', 'Goto Tab', mode = n },
+    ['<leader>8']  = { '8gt', 'Goto Tab', mode = n },
+    ['<leader>9']  = { '9gt', 'Goto Tab', mode = n },
+    ['<leader>0']  = { '10gt', 'Goto Tab', mode = n },
 })
 
 wk.register({
