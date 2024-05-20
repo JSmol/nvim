@@ -21,6 +21,12 @@ return require('lazy').setup({
     'kdheepak/cmp-latex-symbols',
     'windwp/nvim-autopairs',
 
+    -- debugger --
+    'mfussenegger/nvim-dap',
+    'rcarriga/nvim-dap-ui',
+    'nvim-neotest/nvim-nio',
+    'theHamsta/nvim-dap-virtual-text',
+
     {
         'numToStr/Comment.nvim',
         config = function()

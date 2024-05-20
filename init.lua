@@ -21,8 +21,9 @@ require('plugins')
 -- THEME --
 require('theme')
 require('terminal')
+require('debugger')
 require('lsp')
-require('gdb')
+-- require('gdb')
 require('keyboard')
 require('statusline')
 
