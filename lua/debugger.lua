@@ -1,33 +1,5 @@
 local dap = require('dap')
-local dapui = require('dapui')
 require('nvim-dap-virtual-text').setup()
-
-dapui.setup({
-  controls = {
-    element = 'repl',
-    enabled = false,
-  },
-  layouts = { 
-    {
-      elements = {
-        { id = 'scopes', size = 0.33 },
-        { id = 'stacks', size = 0.33 },
-        { id = 'breakpoints', size = 0.33 },
-        -- { id = 'watches', size = 0.25 } 
-      },
-      position = 'bottom',
-      size = 12
-    },
-    {
-      elements = { 
-        { id = 'repl', size = 0.5 },
-        { id = 'console', size = 0.5 }
-      },
-      position = 'right',
-      size = 0.33
-    } 
-  },
-})
 
 dap.adapters.odb = {
   type = 'executable',
@@ -40,9 +12,61 @@ local config = {
     args = { },
 }
 
+function set_win_opts(win)
+  vim.wo[win].relativenumber = false
+  vim.wo[win].number = false
+  vim.wo[win].statusline = ''
+end
+
+local windows = {}
+local debug_window = nil
+local debugger_open = false
+local debugger_initialized = false
+vim.api.nvim_set_option_value('switchbuf', 'usetab,newtab', {})
+
+function init()
+  if not debugger_initialized then
+    debugger_initialized = true
+    local widgets = require('dap.ui.widgets')
+    vim.cmd('tabnew debug.conf.json')
+    vim.cmd('LualineRenameTab DEBUG')
+    debug_window = vim.api.nvim_get_current_win()
+
+    vim.cmd('botright vsplit')
+    local terminal_win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_create_buf(true, false)
+    vim.api.nvim_set_current_buf(buf)
+    dap.defaults.fallback.terminal_win_cmd = function()
+      return buf
+    end
+
+    vim.cmd('botright 12split')
+    local frame_win = vim.api.nvim_get_current_win()
+    set_win_opts(frame_win)
+    windows.frames = widgets.builder(widgets.frames)
+      .new_win(function()
+        return frame_win
+      end)
+      .build()
+
+    vim.cmd('vsplit')
+    local scope_win = vim.api.nvim_get_current_win()
+    set_win_opts(frame_win)
+    windows.scopes = widgets.builder(widgets.scopes)
+      .new_win(function()
+        return scope_win
+      end)
+      .build()
+
+    dap.repl.open(nil, 'vsplit')
+    windows.frames.open()
+    windows.scopes.open()
+  end
+end
+
 function reload()
-  if vim.fn.filereadable('./gdbconfig.json') > 0 then 
-    local configfile = vim.fn.readfile('./gdbconfig.json')
+  if vim.fn.filereadable('./debug.conf.json') > 0 then 
+    local configfile = vim.fn.readfile('./debug.conf.json')
     config = vim.fn.json_decode(configfile)
   end
   dap.run({
@@ -54,23 +78,41 @@ function reload()
     cwd = '${workspaceFolder}',
     setupCommands = {  
       { 
-         text = '-enable-pretty-printing',
-         description =  'enable pretty printing',
-         ignoreFailures = false 
+        text = '-enable-pretty-printing',
+        description =  'enable pretty printing',
+        ignoreFailures = false 
       },
     },
   })
+end
+
+function start()
+  init()
+  reload()
+  windows.scopes.refresh()
+  windows.frames.refresh()
+  vim.api.nvim_set_current_win(debug_window)
+end
+
+vim.fn.sign_define('DapBreakpoint', {text='🔴', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapStopped', {text='👉', texthl='', linehl='', numhl=''})
+
+function runcmd(cmd)
+  return function()
+    cmd()
+    windows.scopes.refresh()
+    windows.frames.refresh()
+  end
 end
 
 local wk = require('which-key')
 wk.register({
   ['<leader>d'] = {
     name = '+debugger',
-    d = { dapui.toggle, 'Toggle Debug UI' },
-    r = { reload, 'Reload && Run' },
-    k = { dap.down, 'Down the Frame Stack' },
-    j = { dap.up, 'Up the Frame Stack' },
-    c = { dap.continue, 'Continue' },
-    b = { dap.toggle_breakpoint, 'Toggle BP' },
+    d = { start, 'Debug!!' },
+    c = { runcmd(dap.continue), 'Continue' },
+    j = { runcmd(dap.up), 'Up the Frame Stack' },
+    k = { runcmd(dap.down), 'Down the Frame Stack' },
+    b = { runcmd(dap.toggle_breakpoint), 'Toggle BP' },
   }
 })
