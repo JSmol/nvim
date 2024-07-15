@@ -2,31 +2,32 @@
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap=true, silent=true })
 
 -- hide line numbers in terminal windows --
--- vim.cmd('autocmd TermOpen * setlocal number relativenumber')
+vim.cmd('autocmd TermOpen * setlocal nonumber norelativenumber')
 
--- toggle terms --
+-- named terminals --
 local terms = {}
 local prebuf = 0
 
-local function update_cwd(name)
-  local tmpfn = '/tmp/termcwd' .. terms[name].term
-  vim.api.nvim_chan_send(
-    terms[name].term,
-    vim.api.nvim_replace_termcodes('<C-u>', true, true, true)
-  )
-  vim.api.nvim_chan_send(
-    terms[name].term,
-    'pwd > ' .. tmpfn .. vim.api.nvim_replace_termcodes('<CR>', true, true, true)
-  )
-  vim.api.nvim_chan_send(
-    terms[name].term,
-    vim.api.nvim_replace_termcodes('<C-l>', true, true, true)
-  )
-  vim.cmd('sleep 100m')
-  terms.cwd = vim.fn.readfile(tmpfn)[1]
-end
+-- autocmd BufEnter * if bufname("#") =~ "NERD_tree" && bufname("%") !~ "NERD_tree" | b# | endif
+-- vim.api.nvim_create_autocmd('BufLeave', {
+--     group = vim.api.nvim_create_augroup('terminal', { clear = true }),
+--     callback = function(ev)
+--       -- print(vim.inspect(ev))
+--       -- print(vim.fn.bufname('#'))
+--       -- print(vim.fn.expand('#'))
+--       -- local name = (vim.fn.expand('#'))
+--       -- print(vim.api.nvim_win_get_number(name))
+--       --_print(vim.uri_to_bufnr(vim.fn.bufname('#')))
+--       -- print(vim.bufnr('#'))
+--       -- if vim.bufnr('#') ~= 9 then
+--       --   print(vim.fn.bufname('#'))
+--       -- end
+--       -- vim.cmd('b#')
+--       -- print(vim.fn.expand('#'))
+--     end
+-- })
 
--- create new terminal buffer and tab
+-- create new named terminal buffer and tab
 local function create_term(name)
   vim.cmd('tabnew')
   vim.cmd('LualineRenameTab ' .. name)
@@ -127,7 +128,8 @@ end
 local wk = require('which-key')
 wk.register({
     ['<leader>o'] = { function() toggle_term('MAIN') end, 'Toggle Term' },
-    ['<leader>b'] = { function() run('BUILD', './build.sh ' .. vim.fn.expand('%')) end, 'Run `build.sh`' },
+    ['<leader>b'] = { function() run('BUILD', './build.sh ' .. vim.fn.expand('%') .. ' && exit') end, 'Run `build.sh`' },
+    ['<leader>rr'] = { function() run('RUN', './run ' .. vim.fn.expand('%')) end, 'Run `run.sh`' },
     ['<leader>fh'] = { find_here, 'Find Files Here' },
 })
 
@@ -169,4 +171,14 @@ wk.register({
     ['<leader>nw'] = { function() run('nw', 'npm run watch', false) end, 'npm run watch' },
     ['<leader>ns'] = { function() run('ns', 'npm run serve', false) end, 'npm run serve' },
 })
+
+-- local on_exit = function(obj)
+--   print(obj.code)
+--   print(obj.signal)
+--   print(obj.stdout)
+--   print(obj.stderr)
+-- end
+
+-- Runs asynchronously:
+-- vim.system({'echo', 'hello'}, { text = true }, on_exit)
 

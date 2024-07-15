@@ -7,6 +7,7 @@ wk.register({
     ['<leader>tt'] = { '<CMD>TroubleToggle<CR>', 'Toggle Trouble' },
     ['<leader>q']  = { '<CMD>bd<CR>', 'Kill Buffer' },
     ['<leader>w']  = { '<CMD>close<CR>', 'Close Window' },
+    ['<leader>;']  = { '<CMD>close<CR>', 'Close Window' },
 })
 
 -- create windows / tabs / panes --
