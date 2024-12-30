@@ -6,7 +6,11 @@ local strings = require('plenary.strings')
 
 local function load_config()
   local config = './jobs.txt'
-  return vim.fn.readfile(config)
+  if vim.fn.filereadable(config) > 0 then
+    return vim.fn.readfile(config)
+  else
+    return {}
+  end
 end
 
 function JobManager:new()
@@ -98,8 +102,9 @@ function JobManager:listjobs()
           if sel == nil then return end
           local job = sel.value
           if job.exited then
-            vim.api.nvim_set_current_buf(job.filebuf)
-            vim.api.nvim_buf_call(job.termbuf, function() vim.cmd('edit!') end)
+            local filebuf = getbuf(job.filepath)
+            vim.api.nvim_buf_call(filebuf, function() vim.cmd('edit!') end)
+            vim.api.nvim_set_current_buf(filebuf)
           else
             vim.api.nvim_set_current_buf(job.termbuf)
           end

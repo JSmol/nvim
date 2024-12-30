@@ -61,3 +61,9 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     end
   end
 })
+
+-- One Tab. Always.
+vim.api.nvim_create_autocmd(
+  { 'TabNew', 'TabNewEntered', 'TabEnter', 'TabLeave' },
+  { callback = function() vim.cmd('silent tabonly!') end }
+)

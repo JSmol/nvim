@@ -49,7 +49,7 @@ return {
       lualine_c = { 'filetype', },
       lualine_x = { function() return require('job-manager'):getline() end },
       lualine_y = { function() return require('job-manager'):status() end },
-      lualine_z = {},
+      lualine_z = { 'trouble' },
     },
 
     inactive_sections = {
@@ -63,7 +63,7 @@ return {
 
     winbar = {},
     inactive_winbar = {},
-    extensions = { 'trouble' }
+    extensions = { 'trouble', 'quickfix' }
 
   }
 }
