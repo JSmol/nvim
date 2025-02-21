@@ -45,7 +45,7 @@ end
 
 function JobManager:create(cmd)
   local loc = cmd:find(' ') or #cmd + 1
-  local filepath = path:new('./logs', cmd:sub(0, loc - 1) .. vim.fn.strftime('%s'))
+  local filepath = path:new('/home/josip/logs', cmd:sub(0, loc - 1) .. vim.fn.strftime('%s'))
   local job = {
     cmd = cmd,
     exited = false,
@@ -60,13 +60,15 @@ function JobManager:create(cmd)
       cmd .. ' 2>&1 | tee ' .. job.filepath:absolute(),
       {
         on_exit = function()
-          self.last = job
-          job.exited = true
-          local filebuf = getbuf(job.filepath)
-          vim.api.nvim_buf_call(filebuf, function() vim.cmd('edit!') end)
-          replace_buf(job.termbuf, filebuf)
-          vim.api.nvim_buf_delete(job.termbuf, {})
-          vim.notify('Jobs DONE!', vim.log.levels.INFO, {})
+          vim.defer_fn(function()
+            self.last = job
+            job.exited = true
+            local filebuf = getbuf(job.filepath)
+            vim.api.nvim_buf_call(filebuf, function() vim.cmd('edit!') end)
+            replace_buf(job.termbuf, filebuf)
+            vim.api.nvim_buf_delete(job.termbuf, {})
+            vim.notify('Jobs DONE!', vim.log.levels.INFO, {})
+          end, 1000)
         end
       }
     )

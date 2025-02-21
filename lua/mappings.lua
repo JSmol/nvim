@@ -11,3 +11,10 @@ wk.add({
   { '<leader>a',  vim.lsp.buf.code_action, desc = 'Code Action' },
   { '<leader>rn', vim.lsp.buf.rename,      desc = 'Rename Symbol' },
 })
+
+wk.add({
+  { '<leader>tp', '<CMD>r! cat ~/competitive/template.cc<CR>ggdd', desc = 'Copy Template' },
+  { '<leader>in', '<CMD>e ./test.in<CR>',                   desc = 'Edit Test Input' },
+  { '<leader>ga', '<CMD>e ~/competitive/algorithms<CR>',    desc = 'View Algorithms' },
+  { '<leader>rr', '<CMD>! ~/competitive/run %<CR>',         desc = 'Run Script' },
+})
